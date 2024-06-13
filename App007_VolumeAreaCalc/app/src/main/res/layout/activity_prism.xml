@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PrismActivity"
+    android:background="@drawable/background2">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="65dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="65dp"
+        android:layout_marginBottom="143dp"
+        android:contentDescription="Icon of a sphere"
+        android:src="@drawable/prism"
+        app:layout_constraintBottom_toTopOf="@+id/prism_height_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/result_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#6FD6A2"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/prism_height_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <EditText
+        android:id="@+id/prism_height_input"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="148dp"
+        android:backgroundTint="#69F0AE"
+
+        android:hint="Prism Height"
+        android:inputType="number"
+        android:shadowColor="#CC000000"
+        android:shadowRadius="10"
+        android:textColor="#9AE59C"
+        android:textColorHint="#40C4FF"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/submit_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <EditText
+        android:id="@+id/prism_width_input"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#69F0AE"
+        android:hint="Prism Width"
+        android:inputType="number"
+        android:shadowColor="#CC000000"
+
+        android:shadowRadius="10"
+        android:textColor="#9AE59C"
+        android:textColorHint="#40C4FF"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/prism_length_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/prism_length_input"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:backgroundTint="#69F0AE"
+        android:hint="Prism Length"
+        android:inputType="number"
+
+        android:shadowColor="#CC000000"
+        android:shadowRadius="10"
+        android:textColor="#9AE59C"
+        android:textColorHint="#40C4FF"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/submit_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/submit_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginBottom="15dp"
+        android:backgroundTint="#6200EA"
+
+        android:text="Calculate Volume"
+        android:textColor="#40C3FE"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/prism_height_input" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

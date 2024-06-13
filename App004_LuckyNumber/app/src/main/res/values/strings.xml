@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">App04_LuckyNumber</string>
+    <string name="title">Lucky Number</string>
+    <string name="input_hint">Enter your name</string>
+    <string name="button_text">What\'s my number?</string>
+    <string name="button_share">Share lucky number</string>
+    <string name="second_title">Your lucky number is:</string>
+</resources>
