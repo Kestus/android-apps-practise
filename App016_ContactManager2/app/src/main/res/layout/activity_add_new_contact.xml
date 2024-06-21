@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    
+    <data>
+        
+        <variable
+            name="clickHandler"
+            type="com.example.app016_contactmanager2.AddContactActivity.AddContactActivityClickHandlers" />
+        
+        <variable
+            name="contact"
+            type="com.example.app016_contactmanager2.db.entities.Contact" />
+        
+        
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="16dp"
+        tools:context=".AddContactActivity">
+
+        <EditText
+            android:id="@+id/contactNameInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="258dp"
+            android:autofillHints="name"
+            android:hint="Name"
+            android:inputType="textPersonName"
+            android:text="@={contact.name}"
+
+            android:textSize="32sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/contactEmailInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:autofillHints="emailAddress"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:text="@={contact.email}"
+            android:textSize="32sp"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/contactNameInput" />
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="89dp"
+            android:onClick="@{clickHandler::onSaveClicked}"
+
+            android:text="Save"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    
+</layout>

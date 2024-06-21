@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    >
+
+    <data>
+
+        <variable
+            name="clickHandlers"
+            type="com.example.app017_learningmanagement.MainActivity.MainActivityClickHandlers" />
+
+        <variable
+            name="spinnerAdapter"
+            type="android.widget.ArrayAdapter" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity"
+        android:paddingTop="30dp"
+        android:paddingBottom="50dp"
+        android:background="#FFF3E0"
+        >
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="TODO"
+            android:onClick="@{clickHandlers::onFABClick}"
+            android:src="@drawable/add"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:maxImageSize="40dp" />
+
+
+        <include
+            android:id="@+id/secondary_layout"
+            layout="@layout/content_main"
+            bind:secondarySpinnerAdapter="@{spinnerAdapter}"
+            bind:secondaryClickHandler="@{clickHandlers}"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+        <variable
+            name="secondarySpinnerAdapter"
+            type="android.widget.ArrayAdapter" />
+        <variable
+            name="secondaryClickHandler"
+            type="com.example.app017_learningmanagement.MainActivity.MainActivityClickHandlers" />
+    </data>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    tools:showIn="@layout/activity_main"
+    >
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner"
+        app:adapter="@{secondarySpinnerAdapter}"
+        android:onItemSelected="@{secondaryClickHandler::onSelectItem}"
+        tools:listitem="@layout/spinner_item"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="16dp"
+        android:padding="4dp"
+        tools:listitem="@layout/list_item"
+
+        />
+
+
+</LinearLayout>
+
+</layout>
