@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">App037_Kt_ContactManager</string>
+    <string name="save">Save</string>
+    <string name="update">Update</string>
+    <string name="delete">Delete</string>
+    <string name="clear">Clear</string>
+</resources>

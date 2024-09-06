@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="contactViewModel"
+            type="com.kes.app037_kt_contactmanager.viewmodel.ContactViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg"
+        tools:context=".MainActivity">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/input_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <EditText
+                android:text="@={contactViewModel.inputName}"
+
+                android:id="@+id/input_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="32dp"
+                android:autofillHints="name"
+                android:hint="contact Name"
+                android:textSize="28sp"
+                android:textColor="#F50057"
+                android:textColorHint="#A9FFFFFF"
+                android:backgroundTint="#F50057"
+                app:layout_constraintEnd_toStartOf="@+id/button_save"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:text="@={contactViewModel.inputEmail}"
+
+                android:id="@+id/input_email"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:autofillHints="emailAddress"
+                android:hint="contact Email"
+                android:textSize="28sp"
+                android:textColor="#F50057"
+                android:textColorHint="#A9FFFFFF"
+                android:backgroundTint="#F50057"
+                app:layout_constraintEnd_toEndOf="@+id/input_name"
+                app:layout_constraintStart_toStartOf="@+id/input_name"
+                app:layout_constraintTop_toBottomOf="@+id/input_name" />
+
+            <Button
+                android:id="@+id/button_save"
+
+                android:onClick="@{()->contactViewModel.saveOrUpdate()}"
+                android:text="@{contactViewModel.isUpdateOrDelete ? @string/update : @string/save}"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="32dp"
+                android:backgroundTint="#F50057"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="@+id/input_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/input_name" />
+
+            <Button
+                android:id="@+id/button_edit"
+
+                android:onClick="@{()->contactViewModel.clearAllOrDelete()}"
+                android:text="@{contactViewModel.isUpdateOrDelete ? @string/delete : @string/clear}"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#F50057"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="@+id/input_email"
+                app:layout_constraintEnd_toEndOf="@+id/button_save"
+                app:layout_constraintStart_toStartOf="@+id/button_save"
+                app:layout_constraintTop_toTopOf="@+id/input_email" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/input_container"
+            tools:listitem="@layout/card_item"
+
+            android:paddingVertical="8dp"
+            android:paddingHorizontal="12dp"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>
