@@ -1,5 +1,6 @@
 package com.kes.app041_kt_shoppinglist.data
 
+import androidx.lifecycle.LiveData
 import com.kes.app041_kt_shoppinglist.domain.ShopItem
 import com.kes.app041_kt_shoppinglist.domain.ShopListRepositoryInterface
 
@@ -25,8 +26,8 @@ class ShopListRepositoryImpl(
         return dao.getByID(id)
     }
 
-    override fun getShopList(): List<ShopItem> {
-        return  shopList
+    override fun getShopList(): LiveData<List<ShopItem>> {
+        return shopList
     }
 
 }

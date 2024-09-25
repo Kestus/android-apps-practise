@@ -1,5 +1,6 @@
 package com.kes.app041_kt_shoppinglist.domain
 
+import androidx.lifecycle.LiveData
 import com.kes.app041_kt_shoppinglist.data.ShopItemDAO
 
 interface ShopListRepositoryInterface {
@@ -12,5 +13,5 @@ interface ShopListRepositoryInterface {
 
     suspend fun getShopItem(id: Int): ShopItem
 
-    fun getShopList(): List<ShopItem>
+    fun getShopList(): LiveData<List<ShopItem>>
 }

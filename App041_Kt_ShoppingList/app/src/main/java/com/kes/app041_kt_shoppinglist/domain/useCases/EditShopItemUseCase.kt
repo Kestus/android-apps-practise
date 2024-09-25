@@ -6,5 +6,5 @@ import com.kes.app041_kt_shoppinglist.domain.ShopListRepositoryInterface
 class EditShopItemUseCase (
     private val repository: ShopListRepositoryInterface
 ) {
-    fun editShopItem(item: ShopItem) = repository.editShopItem(item)
+    suspend fun editShopItem(item: ShopItem) = repository.editShopItem(item)
 }
