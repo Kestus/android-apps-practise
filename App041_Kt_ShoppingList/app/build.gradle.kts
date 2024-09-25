@@ -2,8 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
 
-    // Ksp
-    id("com.google.devtools.ksp") version "2.0.20-1.0.25"
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -36,6 +35,10 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    buildFeatures {
+        dataBinding = true
+    }
 }
 
 dependencies {
@@ -52,5 +55,18 @@ dependencies {
     // Room
     val roomVersion = "2.6.1"
     implementation("androidx.room:room-runtime:$roomVersion")
-    ksp("androidx.room:room-runtime:$roomVersion")
+    ksp("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+    // LifeCycle
+    val lifecycleVersion = "2.8.6"
+    // ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel:$lifecycleVersion")
+    // LiveData
+    implementation("androidx.lifecycle:lifecycle-livedata:$lifecycleVersion")
+    // Annotation processor
+    ksp("androidx.lifecycle:lifecycle-compiler:$lifecycleVersion")
 }
