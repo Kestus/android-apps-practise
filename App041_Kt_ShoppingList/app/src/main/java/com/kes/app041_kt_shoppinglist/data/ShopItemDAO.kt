@@ -1,5 +1,6 @@
 package com.kes.app041_kt_shoppinglist.data
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -11,7 +12,7 @@ import com.kes.app041_kt_shoppinglist.domain.ShopItem
 @Dao
 interface ShopItemDAO {
     @Insert
-    suspend fun insert(item: ShopItem): Int
+    suspend fun insert(item: ShopItem)
 
     @Delete
     suspend fun delete(item: ShopItem)
@@ -23,5 +24,5 @@ interface ShopItemDAO {
     suspend fun getByID(id: Int): ShopItem
 
     @Query("SELECT * FROM shopitem")
-    fun getAll(): List<ShopItem>
+    fun getAll(): LiveData<List<ShopItem>>
 }

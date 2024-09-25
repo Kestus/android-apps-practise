@@ -6,5 +6,5 @@ import com.kes.app041_kt_shoppinglist.domain.ShopListRepositoryInterface
 class GetShopItemUseCase (
     private val repository: ShopListRepositoryInterface
 ) {
-    fun getShopItem(id: Int): ShopItem = repository.getShopItem(id)
+    suspend fun getShopItem(id: Int): ShopItem = repository.getShopItem(id)
 }

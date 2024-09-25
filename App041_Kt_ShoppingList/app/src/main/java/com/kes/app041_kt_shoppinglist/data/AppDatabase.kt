@@ -12,6 +12,8 @@ import com.kes.app041_kt_shoppinglist.domain.ShopItem
 )
 abstract class AppDatabase: RoomDatabase() {
 
+    abstract val shopItemDAO: ShopItemDAO
+
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null
