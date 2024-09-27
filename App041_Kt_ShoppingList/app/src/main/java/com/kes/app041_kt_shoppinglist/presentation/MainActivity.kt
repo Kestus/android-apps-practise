@@ -13,6 +13,9 @@ import com.kes.app041_kt_shoppinglist.R
 import com.kes.app041_kt_shoppinglist.data.AppDatabase
 import com.kes.app041_kt_shoppinglist.data.ShopItemDAO
 import com.kes.app041_kt_shoppinglist.data.ShopListRepositoryImpl
+import com.kes.app041_kt_shoppinglist.presentation.adapter.ShopListAdapter
+import com.kes.app041_kt_shoppinglist.presentation.viewModel.MainViewModel
+import com.kes.app041_kt_shoppinglist.presentation.viewModel.MainViewModelFactory
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         val factory = MainViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory)[MainViewModel::class.java]
         viewModel.shopList.observe(this) {
-            adapter.shopList = it
+            adapter.submitList(it)
         }
 
     }
@@ -88,7 +91,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val item = adapter.shopList[viewHolder.adapterPosition]
+                val item = adapter.currentList[viewHolder.adapterPosition]
                 viewModel.deleteShopItem(item)
             }
 
