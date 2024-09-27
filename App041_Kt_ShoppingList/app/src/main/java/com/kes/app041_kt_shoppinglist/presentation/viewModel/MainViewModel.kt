@@ -1,4 +1,4 @@
-package com.kes.app041_kt_shoppinglist.presentation
+package com.kes.app041_kt_shoppinglist.presentation.viewModel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
