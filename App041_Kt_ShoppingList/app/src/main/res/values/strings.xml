@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">App041_Kt_ShoppingList</string>
+    <string name="add_new_item">Add new item</string>
 </resources>

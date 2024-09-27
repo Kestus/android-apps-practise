@@ -23,6 +23,6 @@ interface ShopItemDAO {
     @Query("SELECT * FROM shopitem WHERE id LIKE :id LIMIT 1")
     suspend fun getByID(id: Int): ShopItem
 
-    @Query("SELECT * FROM shopitem")
+    @Query("SELECT * FROM shopitem ORDER BY id DESC")
     fun getAll(): LiveData<List<ShopItem>>
 }
