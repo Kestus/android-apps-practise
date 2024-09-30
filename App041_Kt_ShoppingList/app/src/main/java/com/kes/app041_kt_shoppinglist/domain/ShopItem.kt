@@ -5,9 +5,13 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class ShopItem(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int,
     val name: String,
     val count: Int,
-    val active: Boolean
-)
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = UNDEFINED_ID,
+    val active: Boolean = true
+) {
+    companion object {
+        const val UNDEFINED_ID = 0
+    }
+}
