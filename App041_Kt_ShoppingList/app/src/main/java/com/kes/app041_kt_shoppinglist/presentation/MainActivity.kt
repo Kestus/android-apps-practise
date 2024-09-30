@@ -1,7 +1,6 @@
 package com.kes.app041_kt_shoppinglist.presentation
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -9,6 +8,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.kes.app041_kt_shoppinglist.R
 import com.kes.app041_kt_shoppinglist.data.AppDatabase
 import com.kes.app041_kt_shoppinglist.data.ShopItemDAO
@@ -24,6 +24,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var adapter: ShopListAdapter
+
+    private lateinit var btnAdd: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +49,12 @@ class MainActivity : AppCompatActivity() {
             adapter.submitList(it)
         }
 
+        btnAdd = findViewById(R.id.btn_add_shop_item)
+        btnAdd.setOnClickListener {
+            val intent = ShopItemActivity.newIntentAddItem(this)
+            startActivity(intent)
+        }
+
     }
 
     private fun setupRecyclerView() {
@@ -67,7 +75,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupClickListener() {
         adapter.onShopItemClickListener = {
-            Toast.makeText(this, it.name, Toast.LENGTH_SHORT).show()
+            val intent = ShopItemActivity.newIntentEditItem(this, it.id)
+            startActivity(intent)
         }
     }
 
