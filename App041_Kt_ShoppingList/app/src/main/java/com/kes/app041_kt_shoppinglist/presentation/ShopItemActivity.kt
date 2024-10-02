@@ -11,7 +11,7 @@ import com.kes.app041_kt_shoppinglist.R
 import com.kes.app041_kt_shoppinglist.domain.ShopItem
 import com.kes.app041_kt_shoppinglist.domain.fragments.ShopItemFragment
 
-class ShopItemActivity : AppCompatActivity() {
+class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnFragmentFinishedListener {
 
     private lateinit var screenMode: String
     private var shopItemID: Int = ShopItem.UNDEFINED_ID
@@ -69,8 +69,11 @@ class ShopItemActivity : AppCompatActivity() {
         }
     }
 
-    companion object {
+    override fun onFinished() {
+        finish()
+    }
 
+    companion object {
         private const val EXTRA_SCREEN_MODE = "extra_mode"
         private const val EXTRA_SHOP_ITEM_ID = "extra_shop_item_id"
         private const val MODE_EDIT = "mode_edit"

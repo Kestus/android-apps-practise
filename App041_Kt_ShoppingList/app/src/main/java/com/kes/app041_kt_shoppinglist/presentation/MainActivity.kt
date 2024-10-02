@@ -1,6 +1,7 @@
 package com.kes.app041_kt_shoppinglist.presentation
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -19,7 +20,7 @@ import com.kes.app041_kt_shoppinglist.presentation.adapter.ShopListAdapter
 import com.kes.app041_kt_shoppinglist.presentation.viewModel.MainViewModel
 import com.kes.app041_kt_shoppinglist.presentation.viewModel.MainViewModelFactory
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ShopItemFragment.OnFragmentFinishedListener {
 
     private lateinit var dao: ShopItemDAO
     private lateinit var repository: ShopListRepositoryImpl
@@ -131,5 +132,10 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.shop_item_container, fragment)
             .addToBackStack(null)
             .commit()
+    }
+
+    override fun onFinished() {
+        Toast.makeText(this, "Saved!", Toast.LENGTH_SHORT).show()
+        supportFragmentManager.popBackStack()
     }
 }

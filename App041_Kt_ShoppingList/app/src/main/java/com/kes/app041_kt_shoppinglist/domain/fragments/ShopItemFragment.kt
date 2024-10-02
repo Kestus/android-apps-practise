@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,6 +43,20 @@ class ShopItemFragment() : Fragment() {
     private lateinit var screenMode: String
     private var shopItemID: Int = ShopItem.UNDEFINED_ID
 
+    private lateinit var onFragmentFinished: OnFragmentFinishedListener
+
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        // DB and VM
+        initRepository()
+        viewModel = ShopItemViewModelFactory(repository).create(ShopItemViewModel::class.java)
+
+        if (context is OnFragmentFinishedListener) {
+            onFragmentFinished = context
+        } else throw RuntimeException("Activity must implement: OnFragmentFinishedListener")
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         parseArgs()
@@ -68,15 +83,6 @@ class ShopItemFragment() : Fragment() {
             MODE_ADD -> initAddMode()
             MODE_EDIT -> initEditMode()
         }
-
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        // DB and VM
-        initRepository()
-        viewModel = ShopItemViewModelFactory(repository).create(ShopItemViewModel::class.java)
-
     }
 
     private fun initRepository() {
@@ -85,18 +91,20 @@ class ShopItemFragment() : Fragment() {
         repository = ShopListRepositoryImpl(dao)
     }
 
-    private fun addFinishedStateObserver() {
-        viewModel.finished.observe(viewLifecycleOwner) {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
-    }
-
     private fun addLoadingStateObserver() {
         viewModel.loading.observe(viewLifecycleOwner) {
             when (it) {
                 true -> progressBar.visibility = View.VISIBLE
                 false -> progressBar.visibility = View.GONE
             }
+        }
+    }
+
+    private fun addFinishedStateObserver() {
+        viewModel.finished.observe(viewLifecycleOwner) {
+            Log.d("TAG", "addFinishedStateObserver: finished")
+            Log.d("TAG", "addFinishedStateObserver: $onFragmentFinished")
+            onFragmentFinished.onFinished()
         }
     }
 
@@ -181,6 +189,10 @@ class ShopItemFragment() : Fragment() {
                 viewModel.resetErrorInputCount()
             }
         })
+    }
+
+    interface OnFragmentFinishedListener {
+        fun onFinished()
     }
 
     companion object {
