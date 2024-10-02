@@ -6,4 +6,5 @@
     <color name="card_active">#FF8A80</color>
     <color name="card_inactive">#FFCDD2</color>
     <color name="accent">#F50057</color>
+    <color name="primary">#B9F6CA</color>
 </resources>
