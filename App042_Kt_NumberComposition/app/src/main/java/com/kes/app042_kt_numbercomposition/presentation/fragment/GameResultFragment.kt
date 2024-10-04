@@ -35,14 +35,9 @@ class GameResultFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    retryGame()
-                }
-            }
-        )
+
+        addOnBackPressedCallback()
+
     }
 
     override fun onDestroyView() {
@@ -51,10 +46,14 @@ class GameResultFragment : Fragment() {
     }
 
     private fun parseArgs() {
-        gameResult = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            requireArguments().getSerializable(KEY_RESULT, GameResult::class.java)!!
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requireArguments().getParcelable(KEY_RESULT, GameResult::class.java)?.let {
+                gameResult = it
+            }
         } else {
-            requireArguments().getSerializable(KEY_RESULT) as GameResult
+            requireArguments().getParcelable<GameResult>(KEY_RESULT)?.let {
+                gameResult = it
+            }
         }
     }
 
@@ -65,6 +64,15 @@ class GameResultFragment : Fragment() {
         )
     }
 
+    private fun addOnBackPressedCallback() {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                retryGame()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+    }
+
     companion object {
 
         private const val KEY_RESULT = "result"
@@ -72,7 +80,7 @@ class GameResultFragment : Fragment() {
         fun newInstance(result: GameResult): GameResultFragment {
             return GameResultFragment().apply {
                 arguments = Bundle().apply {
-                    putSerializable(KEY_RESULT, result)
+                    putParcelable(KEY_RESULT, result)
                 }
             }
         }
