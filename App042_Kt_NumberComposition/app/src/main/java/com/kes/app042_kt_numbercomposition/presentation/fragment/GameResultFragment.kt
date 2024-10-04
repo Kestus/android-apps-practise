@@ -37,6 +37,7 @@ class GameResultFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         addOnBackPressedCallback()
+        binding.btnRetry.setOnClickListener { retryGame() }
 
     }
 
