@@ -10,10 +10,10 @@
     <string name="btn_medium">СРЕДНИЙ</string>
     <string name="btn_hard">СЛОЖНЫЙ</string>
     <string name="select_level">Выберите уровень:</string>
-    <string name="progress_answers">Правильных ответов %s (минимум %s)</string>
-    <string name="req_answers">Необходимое количество правильных ответов: %s</string>
-    <string name="score_answers">Ваш счет: %s</string>
-    <string name="req_percent">Необходимый процент правильных ответов: %s</string>
-    <string name="score_percent">Ваш процент правильных ответов: %s</string>
+    <string name="progress_answers">Правильных ответов %d (минимум %d)</string>
+    <string name="req_answers">Необходимое количество правильных ответов: %d</string>
+    <string name="score_answers">Ваш счет: %d</string>
+    <string name="req_percent">Необходимый процент правильных ответов: %d</string>
+    <string name="score_percent">Ваш процент правильных ответов: %d</string>
     <string name="btn_try_again">Попробовать снова</string>
 </resources>
