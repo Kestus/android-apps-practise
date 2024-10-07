@@ -14,6 +14,7 @@ import com.kes.app042_kt_numbercomposition.databinding.FragmentGameBinding
 import com.kes.app042_kt_numbercomposition.domain.entity.GameResult
 import com.kes.app042_kt_numbercomposition.domain.entity.Level
 import com.kes.app042_kt_numbercomposition.domain.viewmodel.GameViewModel
+import com.kes.app042_kt_numbercomposition.domain.viewmodel.GameViewModelFactory
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion as AndroidViewModelFactory
 
 class GameFragment : Fragment() {
@@ -23,11 +24,12 @@ class GameFragment : Fragment() {
         get() = _binding ?: throw RuntimeException("FragmentGameBinding == null")
 
     private lateinit var level: Level
+
+    private val viewModelFactory by lazy {
+        GameViewModelFactory(requireActivity().application, level)
+    }
     private val viewModel: GameViewModel by lazy {
-        ViewModelProvider(
-            this,
-            AndroidViewModelFactory.getInstance(requireActivity().application)
-        )[GameViewModel::class.java]
+        ViewModelProvider(this, viewModelFactory)[GameViewModel::class.java]
     }
 
     private val tvOptions: MutableList<TextView> by lazy {
@@ -62,7 +64,6 @@ class GameFragment : Fragment() {
 
         observeViewModel()
         setOptionsOnClickListeners()
-        viewModel.startGame(level)
     }
 
     private fun observeViewModel() {
