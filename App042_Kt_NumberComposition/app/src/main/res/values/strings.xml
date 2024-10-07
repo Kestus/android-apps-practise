@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">App042_Kt_NumberComposition</string>
+    <string name="app_title">Number composition</string>
+    <string name="rules_description">Rules of the Game: there will be three figures in front of you, one on top and two on the bottom, two of them will contain numbers. It is necessary that the sum of the numbers from the two lower figures be equal to the number in the upper figure, for this you need to insert the missing number.</string>
+    <string name="rules_example">Example: There is a number 7 in the upper circle, and a question mark in one of the lower ones, and the number 4 in the other. So the number 3 should be in place of the question mark, because 3 ÷ 4 = 7</string>
+    <string name="btn_understood">Understood</string>
+    <string name="btn_test">TEST</string>
+    <string name="select_level">Select level:</string>
+    <string name="btn_easy">EASY</string>
+    <string name="btn_medium">MEDIUM</string>
+    <string name="btn_hard">HARD</string>
+    <string name="progress_answers">Correct answers %d (minimum %d)</string>
+    <string name="required_answers">Required correct answers: %d</string>
+    <string name="btn_try_again">Try again</string>
+    <string name="score_answers">Your score: %d</string>
+    <string name="required_percentage">Required percentage of correct answers: %d%%</string>
+    <string name="score_percentage">Your percentage of correct answers: %d%%</string>
+    <string name="ic_gameover">GameOver</string>
+    <string name="question_mark" translatable="false">\?</string>
+</resources>

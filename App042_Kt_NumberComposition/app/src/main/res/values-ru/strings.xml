@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">App042_Kt_NumberComposition</string>
+    <string name="app_title">Состав числа</string>
+    <string name="rules_description">Правила Игры: перед вами будет три фигуры, одна сверху и две снизу, в двух из них будут числа. Необходимо, чтобы сумма чисел из двух нижних фигур была равна числу в верхней фигуре, для этого нужно вставить недостающее число.</string>
+    <string name="rules_example">Пример: В Верхнем круге число 7, и в одном из нижних знак вопроса, а в другом число 4. Значит на месте вопросительного знака должно быть число 3, потому что 3 ÷ 4 = 7</string>
+    <string name="btn_understood">Понятно</string>
+    <string name="btn_test">ТЕСТ</string>
+    <string name="btn_easy">ЛЕГКИЙ</string>
+    <string name="btn_medium">СРЕДНИЙ</string>
+    <string name="btn_hard">СЛОЖНЫЙ</string>
+    <string name="select_level">Выберите уровень:</string>
+    <string name="progress_answers">Правильных ответов %d (минимум %d)</string>
+    <string name="required_answers">Необходимое количество правильных ответов: %d</string>
+    <string name="score_answers">Ваш счет: %d</string>
+    <string name="required_percentage">Необходимый процент правильных ответов: %d%%</string>
+    <string name="score_percentage">Ваш процент правильных ответов: %d%%</string>
+    <string name="btn_try_again">Попробовать снова</string>
+    <string name="ic_gameover">Гамовер</string>
+</resources>
