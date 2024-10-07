@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.kes.app042_kt_numbercomposition.R
 import com.kes.app042_kt_numbercomposition.databinding.FragmentGameResultBinding
 import com.kes.app042_kt_numbercomposition.domain.entity.GameResult
 
@@ -38,7 +39,38 @@ class GameResultFragment : Fragment() {
 
         addOnBackPressedCallback()
         binding.btnRetry.setOnClickListener { retryGame() }
+        bindImage()
+        bindTextViews()
+    }
 
+    private fun bindImage() {
+        val imgSrc = if (gameResult.winner) R.drawable.ic_smile
+        else R.drawable.ic_frown
+        binding.emojiResult.setImageResource(imgSrc)
+    }
+
+    private fun bindTextViews() {
+        binding.apply {
+            tvRequiredAnswers.text = String.format(
+                getString(R.string.required_answers),
+                gameResult.gameSettings.minCountOfRightAnswers
+            )
+
+            tvScoreAnswers.text = String.format(
+                getString(R.string.score_answers),
+                gameResult.countOfCorrectAnswers
+            )
+
+            tvRequiredPercentage.text = String.format(
+                getString(R.string.required_percentage),
+                gameResult.gameSettings.minPercentOfRightAnswers
+            )
+
+            tvScorePercentage.text = String.format(
+                getString(R.string.score_percentage),
+                gameResult.percentOfCorrectAnswers
+            )
+        }
     }
 
     override fun onDestroyView() {
