@@ -26,12 +26,12 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     private lateinit var level: Level
     private lateinit var gameSettings: GameSettings
 
-    private var countOfRightAnswers = 0
+    private var countOfCorrectAnswers = 0
     private var countOfQuestion = 0
 
     private var timer: CountDownTimer? = null
     private val _formattedTimer = MutableLiveData<String>()
-    private val formattedTimer: LiveData<String>
+    val formattedTimer: LiveData<String>
         get() = _formattedTimer
 
     private val _question = MutableLiveData<Question>()
@@ -65,6 +65,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         getGameSettings(level)
         startTimer()
         generateQuestion()
+        updateProgress()
     }
 
     private fun getGameSettings(level: Level) {
@@ -109,7 +110,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     private fun checkAnswer(number: Int) {
         val correctAnswer = _question.value?.correctAnswer
         if (number == correctAnswer) {
-            countOfRightAnswers++
+            countOfCorrectAnswers++
         }
         countOfQuestion++
     }
@@ -119,22 +120,22 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         _percentOfCorrectAnswers.value = percent
         _progressAnswers.value = String.format(
             context.resources.getString(R.string.progress_answers),
-            countOfRightAnswers,
+            countOfCorrectAnswers,
             gameSettings.minCountOfRightAnswers
         )
-        _enoughCount.value = countOfRightAnswers >= gameSettings.minCountOfRightAnswers
+        _enoughCount.value = countOfCorrectAnswers >= gameSettings.minCountOfRightAnswers
         _enoughPercentage.value = percent >= gameSettings.minPercentOfRightAnswers
     }
 
     private fun calculatePercentage(): Int {
-        return ((countOfRightAnswers / countOfQuestion.toDouble()) * 100).toInt()
+        return ((countOfCorrectAnswers / countOfQuestion.toDouble()) * 100).toInt()
     }
 
     private fun finishGame() {
         _gameResult.value = GameResult(
             enoughCount.value == true && enoughPercent.value == true,
-            countOfRightAnswers,
-            countOfQuestion,
+            countOfCorrectAnswers,
+            percentOfCorrectAnswers.value?: 0,
             gameSettings
         )
     }
