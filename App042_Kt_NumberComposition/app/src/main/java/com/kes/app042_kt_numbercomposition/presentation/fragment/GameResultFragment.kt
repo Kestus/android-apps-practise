@@ -33,7 +33,7 @@ class GameResultFragment : Fragment() {
 
         setRetryGameListener()
         bindImage()
-        bindTextViews()
+        bindData()
     }
 
     private fun bindImage() {
@@ -42,28 +42,8 @@ class GameResultFragment : Fragment() {
         binding.emojiResult.setImageResource(imgSrc)
     }
 
-    private fun bindTextViews() {
-        binding.apply {
-            tvRequiredAnswers.text = String.format(
-                getString(R.string.required_answers),
-                gameResult.gameSettings.minCountOfRightAnswers
-            )
-
-            tvScoreAnswers.text = String.format(
-                getString(R.string.score_answers),
-                gameResult.countOfCorrectAnswers
-            )
-
-            tvRequiredPercentage.text = String.format(
-                getString(R.string.required_percentage),
-                gameResult.gameSettings.minPercentOfRightAnswers
-            )
-
-            tvScorePercentage.text = String.format(
-                getString(R.string.score_percentage),
-                gameResult.percentOfCorrectAnswers
-            )
-        }
+    private fun bindData() {
+        binding.gameResult = gameResult
     }
 
     override fun onDestroyView() {

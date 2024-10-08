@@ -17,4 +17,5 @@
     <string name="score_percentage">Ваш процент правильных ответов: %d%%</string>
     <string name="btn_try_again">Попробовать снова</string>
     <string name="ic_gameover">Гамовер</string>
+    <string name="brain">Мозг</string>
 </resources>
