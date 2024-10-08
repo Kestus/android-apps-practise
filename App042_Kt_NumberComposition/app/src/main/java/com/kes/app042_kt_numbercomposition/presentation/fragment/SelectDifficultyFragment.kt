@@ -5,11 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.kes.app042_kt_numbercomposition.R
+import androidx.navigation.fragment.findNavController
 import com.kes.app042_kt_numbercomposition.databinding.FragmentDifficultySelectBinding
 import com.kes.app042_kt_numbercomposition.domain.entity.Level
 
-class DifficultySelectFragment: Fragment() {
+class SelectDifficultyFragment : Fragment() {
 
     private var _binding: FragmentDifficultySelectBinding? = null
     private val binding: FragmentDifficultySelectBinding
@@ -39,23 +39,13 @@ class DifficultySelectFragment: Fragment() {
     }
 
     private fun launchGameFragment(level: Level) {
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.main_container, GameFragment.newInstance(level))
-            .addToBackStack(GameFragment.NAME)
-            .commit()
+        findNavController().navigate(
+            SelectDifficultyFragmentDirections.actionDifficultySelectFragmentToGameFragment(level)
+        )
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-
-        const val NAME = "DifficultySelectFragment"
-
-        fun newInstance(): DifficultySelectFragment {
-            return DifficultySelectFragment()
-        }
     }
 }

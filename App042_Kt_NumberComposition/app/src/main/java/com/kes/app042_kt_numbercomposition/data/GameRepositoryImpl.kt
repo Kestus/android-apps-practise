@@ -11,9 +11,8 @@ import kotlin.random.Random
 
 object GameRepositoryImpl : GameRepository {
 
-    private const val MIN_SUM_VALUE = 2
+    private const val MIN_SUM_VALUE = 7
     private const val MIN_ANSWER_VALUE = 1
-
 
     override fun generateQuestion(maxSumValue: Int, countOfOptions: Int): Question {
         val sum = Random.nextInt(MIN_SUM_VALUE, maxSumValue + 1)
@@ -27,7 +26,7 @@ object GameRepositoryImpl : GameRepository {
             options.add(Random.nextInt(from, until))
         }
 
-        return Question(sum, visibleNumber, options.toList())
+        return Question(sum, visibleNumber, options.shuffled())
     }
 
     override fun getGameSettings(level: Level): GameSettings {

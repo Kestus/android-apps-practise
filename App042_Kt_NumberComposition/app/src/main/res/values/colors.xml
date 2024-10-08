@@ -6,4 +6,6 @@
     <color name="accent">#F50057</color>
     <color name="purple">#6200EA</color>
     <color name="teal">#00BFA5</color>
+    <color name="green">#00E676</color>
+    <color name="red">#FF3D00</color>
 </resources>

@@ -1,10 +1,12 @@
 package com.kes.app042_kt_numbercomposition.domain.viewmodel
 
 import android.app.Application
+import android.content.Context
 import android.os.CountDownTimer
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.kes.app042_kt_numbercomposition.R
 import com.kes.app042_kt_numbercomposition.data.GameRepositoryImpl
 import com.kes.app042_kt_numbercomposition.domain.entity.GameResult
@@ -15,23 +17,24 @@ import com.kes.app042_kt_numbercomposition.domain.useCases.GenerateQuestionUseCa
 import com.kes.app042_kt_numbercomposition.domain.useCases.GetGameSettingsUseCase
 import java.util.Locale
 
-class GameViewModel(application: Application) : AndroidViewModel(application) {
+class GameViewModel(
+    private val application: Application,
+    private val level: Level
+) : ViewModel() {
 
-    private val context = application
     private val repository = GameRepositoryImpl
 
     private val generateQuestionUseCase = GenerateQuestionUseCase(repository)
     private val getGameSettingsUseCase = GetGameSettingsUseCase(repository)
 
-    private lateinit var level: Level
     private lateinit var gameSettings: GameSettings
 
-    private var countOfRightAnswers = 0
+    private var countOfCorrectAnswers = 0
     private var countOfQuestion = 0
 
     private var timer: CountDownTimer? = null
     private val _formattedTimer = MutableLiveData<String>()
-    private val formattedTimer: LiveData<String>
+    val formattedTimer: LiveData<String>
         get() = _formattedTimer
 
     private val _question = MutableLiveData<Question>()
@@ -60,15 +63,18 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     private val _gameResult = MutableLiveData<GameResult>()
     val gameResult: LiveData<GameResult> get() = _gameResult
 
-
-    fun startGame(level: Level) {
-        getGameSettings(level)
-        startTimer()
-        generateQuestion()
+    init {
+        startGame()
     }
 
-    private fun getGameSettings(level: Level) {
-        this.level = level
+    private fun startGame() {
+        getGameSettings()
+        startTimer()
+        generateQuestion()
+        updateProgress()
+    }
+
+    private fun getGameSettings() {
         this.gameSettings = getGameSettingsUseCase(this.level)
         this._minPercent.value = gameSettings.minPercentOfRightAnswers
     }
@@ -109,7 +115,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     private fun checkAnswer(number: Int) {
         val correctAnswer = _question.value?.correctAnswer
         if (number == correctAnswer) {
-            countOfRightAnswers++
+            countOfCorrectAnswers++
         }
         countOfQuestion++
     }
@@ -118,23 +124,23 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         val percent = calculatePercentage()
         _percentOfCorrectAnswers.value = percent
         _progressAnswers.value = String.format(
-            context.resources.getString(R.string.progress_answers),
-            countOfRightAnswers,
+            application.resources.getString(R.string.progress_answers),
+            countOfCorrectAnswers,
             gameSettings.minCountOfRightAnswers
         )
-        _enoughCount.value = countOfRightAnswers >= gameSettings.minCountOfRightAnswers
+        _enoughCount.value = countOfCorrectAnswers >= gameSettings.minCountOfRightAnswers
         _enoughPercentage.value = percent >= gameSettings.minPercentOfRightAnswers
     }
 
     private fun calculatePercentage(): Int {
-        return ((countOfRightAnswers / countOfQuestion.toDouble()) * 100).toInt()
+        return ((countOfCorrectAnswers / countOfQuestion.toDouble()) * 100).toInt()
     }
 
     private fun finishGame() {
         _gameResult.value = GameResult(
             enoughCount.value == true && enoughPercent.value == true,
-            countOfRightAnswers,
-            countOfQuestion,
+            countOfCorrectAnswers,
+            percentOfCorrectAnswers.value?: 0,
             gameSettings
         )
     }
