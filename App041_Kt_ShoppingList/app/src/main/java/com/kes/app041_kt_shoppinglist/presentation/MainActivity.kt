@@ -6,16 +6,14 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.kes.app041_kt_shoppinglist.R
 import com.kes.app041_kt_shoppinglist.data.AppDatabase
 import com.kes.app041_kt_shoppinglist.data.ShopItemDAO
 import com.kes.app041_kt_shoppinglist.data.ShopListRepositoryImpl
-import com.kes.app041_kt_shoppinglist.domain.fragments.ShopItemFragment
+import com.kes.app041_kt_shoppinglist.databinding.ActivityMainBinding
 import com.kes.app041_kt_shoppinglist.presentation.adapter.ShopListAdapter
 import com.kes.app041_kt_shoppinglist.presentation.viewModel.MainViewModel
 import com.kes.app041_kt_shoppinglist.presentation.viewModel.MainViewModelFactory
@@ -28,65 +26,57 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnFragmentFinishedLis
     private lateinit var viewModel: MainViewModel
     private lateinit var adapter: ShopListAdapter
 
-    private lateinit var btnAdd: FloatingActionButton
-    private var shopItemContainer: FragmentContainerView? = null
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
         // Database
         dao = AppDatabase.getInstance(this).shopItemDAO
         repository = ShopListRepositoryImpl(dao)
 
-        // ViewModel/Recycler
+        // RecyclerView
+        adapter = ShopListAdapter()
         setupRecyclerView()
+
+        // ViewModel
+        setupViewModel()
+
+        // Listeners
+        addItemClickListener()
+        addFabClickListener()
+        addItemLongClickListener()
+        addItemSwipeListener()
+    }
+
+    private fun isInLandscape() = binding.shopItemContainer != null
+
+    private fun setupRecyclerView() {
+        binding.rvShopList.adapter = adapter
+        for (viewTypes in ShopListAdapter.ViewTypes.entries) {
+            binding.rvShopList.recycledViewPool.setMaxRecycledViews(
+                viewTypes.value,
+                ShopListAdapter.MAX_POOL_SIZE
+            )
+        }
+    }
+
+    private fun setupViewModel() {
         val factory = MainViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory)[MainViewModel::class.java]
         viewModel.shopList.observe(this) {
             adapter.submitList(it)
         }
-
-        // Load Shop item fragment, if in landscape mode
-        shopItemContainer = findViewById(R.id.shop_item_container)
-
-        btnAdd = findViewById(R.id.btn_add_shop_item)
-        btnAdd.setOnClickListener {
-            if (!isInLandscape()) {
-                val intent = ShopItemActivity.newIntentAddItem(this)
-                startActivity(intent)
-            } else {
-                launchFragment(ShopItemFragment.newInstanceAddItem())
-            }
-        }
-
     }
 
-    private fun isInLandscape() = shopItemContainer != null
-
-    private fun setupRecyclerView() {
-        val rvShopList: RecyclerView = findViewById(R.id.rv_shop_list)
-        adapter = ShopListAdapter()
-        rvShopList.adapter = adapter
-        for (viewTypes in ShopListAdapter.ViewTypes.entries) {
-            rvShopList.recycledViewPool.setMaxRecycledViews(
-                viewTypes.value,
-                ShopListAdapter.MAX_POOL_SIZE
-            )
-        }
-
-        setupItemClickListener()
-        setupItemLongClickListener()
-        setupItemSwipeListener(rvShopList)
-    }
-
-    private fun setupItemClickListener() {
+    private fun addItemClickListener() {
         adapter.onShopItemClickListener = {
             if (!isInLandscape()) {
                 val intent = ShopItemActivity.newIntentEditItem(this, it.id)
@@ -97,13 +87,24 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnFragmentFinishedLis
         }
     }
 
-    private fun setupItemLongClickListener() {
+    private fun addFabClickListener() {
+        binding.btnAddShopItem.setOnClickListener {
+            if (!isInLandscape()) {
+                val intent = ShopItemActivity.newIntentAddItem(this)
+                startActivity(intent)
+            } else {
+                launchFragment(ShopItemFragment.newInstanceAddItem())
+            }
+        }
+    }
+
+    private fun addItemLongClickListener() {
         adapter.onShopItemLongClickListener = {
             viewModel.changeActiveState(it)
         }
     }
 
-    private fun setupItemSwipeListener(recyclerView: RecyclerView) {
+    private fun addItemSwipeListener() {
         val callback = object : ItemTouchHelper.SimpleCallback(
             0,
             ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
@@ -123,7 +124,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnFragmentFinishedLis
 
         }
         val itemTouchHelper = ItemTouchHelper(callback)
-        itemTouchHelper.attachToRecyclerView(recyclerView)
+        itemTouchHelper.attachToRecyclerView(binding.rvShopList)
     }
 
     private fun launchFragment(fragment: ShopItemFragment) {

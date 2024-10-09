@@ -20,7 +20,7 @@ class MainViewModel(
 
     var shopList: LiveData<List<ShopItem>> = getShopListUseCase.getShopList()
 
-    fun  deleteShopItem(item: ShopItem) = viewModelScope.launch {
+    fun deleteShopItem(item: ShopItem) = viewModelScope.launch {
         deleteShopItemUseCase.deleteShopItem(item)
     }
 
