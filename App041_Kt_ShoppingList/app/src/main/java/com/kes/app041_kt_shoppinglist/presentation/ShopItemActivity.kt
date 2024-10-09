@@ -9,7 +9,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.kes.app041_kt_shoppinglist.R
 import com.kes.app041_kt_shoppinglist.domain.ShopItem
-import com.kes.app041_kt_shoppinglist.domain.fragments.ShopItemFragment
 
 class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnFragmentFinishedListener {
 

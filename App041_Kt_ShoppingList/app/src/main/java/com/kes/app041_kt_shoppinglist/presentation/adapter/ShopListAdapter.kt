@@ -2,8 +2,12 @@ package com.kes.app041_kt_shoppinglist.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.ListAdapter
 import com.kes.app041_kt_shoppinglist.R
+import com.kes.app041_kt_shoppinglist.databinding.ShopItemActiveBinding
+import com.kes.app041_kt_shoppinglist.databinding.ShopItemInactiveBinding
 import com.kes.app041_kt_shoppinglist.domain.ShopItem
 
 class ShopListAdapter
@@ -22,25 +26,36 @@ class ShopListAdapter
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopItemViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(viewType, parent, false)
-        return ShopItemViewHolder(view)
+        val binding = DataBindingUtil.inflate<ViewDataBinding>(
+            LayoutInflater.from(parent.context),
+            viewType,
+            parent,
+            false
+        )
+        return ShopItemViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ShopItemViewHolder, position: Int) {
         val item: ShopItem = getItem(position)
+        val binding = holder.binding
 
-        holder.apply {
-            tvName.text = item.name
-            tvCount.text = item.count.toString()
-
-            view.setOnLongClickListener {
+        binding.root.apply {
+            setOnLongClickListener {
                 onShopItemLongClickListener?.invoke(item)
                 true
             }
 
-            view.setOnClickListener {
+            setOnClickListener {
                 onShopItemClickListener?.invoke(item)
+            }
+        }
+
+        when(binding) {
+            is ShopItemActiveBinding -> {
+                binding.shopItem = item
+            }
+            is ShopItemInactiveBinding -> {
+                binding.shopItem = item
             }
         }
     }
