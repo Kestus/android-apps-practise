@@ -11,7 +11,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import com.kes.app043_kt_coroutinesstart.databinding.ActivityMainBinding
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
@@ -31,50 +34,42 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnDownload.setOnClickListener {
-            loadData()
+            lifecycleScope.launch {
+                loadData()
+            }
         }
     }
 
-    private fun loadData() {
+    private suspend fun loadData() {
         binding.apply {
             progressBar.isVisible = true
             btnDownload.isEnabled = false
+        }
 
-            loadCity { city ->
-                tvCity.text = city
+        val city = loadCity()
+        binding.tvCity.text = city
 
-                loadTemp(city) { temp ->
-                    tvTemp.text = temp.toString()
-                    progressBar.isVisible = false
-                    btnDownload.isEnabled = true
-                }
-            }
+        val temp = loadTemp(city)
+        binding.tvTemp.text = temp.toString()
+
+        binding.apply {
+            progressBar.isVisible = false
+            btnDownload.isEnabled = true
         }
     }
 
-    private fun loadCity(callback: (String)->Unit) {
-        thread {
-            Thread.sleep(2000)
-            Handler(Looper.getMainLooper()).post {
-                callback.invoke("Moscow")
-            }
-        }
+    private suspend fun loadCity(): String {
+        delay(2000)
+        return "Moscow"
     }
 
-    private fun loadTemp(city: String, callback: (Int)->Unit) {
-        thread {
-            runOnUiThread {
-                Toast.makeText(
-                    this,
-                    "Loading temp for city: $city",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            Thread.sleep(2000)
-            runOnUiThread {
-                callback.invoke(6)
-            }
-
-        }
+    private suspend fun loadTemp(city: String): Int {
+        Toast.makeText(
+            this,
+            "Loading temp for city: $city",
+            Toast.LENGTH_SHORT
+        ).show()
+        delay(2000)
+        return 9
     }
 }
