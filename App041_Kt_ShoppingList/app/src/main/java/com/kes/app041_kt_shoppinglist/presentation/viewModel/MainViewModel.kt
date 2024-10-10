@@ -29,7 +29,7 @@ class MainViewModel(
     }
 
     fun changeActiveState(item: ShopItem) = viewModelScope.launch {
-        val newItem = item.copy(active = !item.active)
+        val newItem = item.copy(enabled = !item.enabled)
         editShopItemUseCase.editShopItem(newItem)
     }
 

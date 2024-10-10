@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.kes.app041_kt_shoppinglist.data.ShopListRepositoryImpl
 
+@Suppress("UNCHECKED_CAST")
 class MainViewModelFactory(
     private val repository: ShopListRepositoryImpl
 ): ViewModelProvider.Factory {

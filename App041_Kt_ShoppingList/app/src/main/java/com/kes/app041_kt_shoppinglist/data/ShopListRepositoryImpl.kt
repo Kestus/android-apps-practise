@@ -1,33 +1,39 @@
 package com.kes.app041_kt_shoppinglist.data
 
+import android.app.Application
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.map
+import androidx.lifecycle.switchMap
 import com.kes.app041_kt_shoppinglist.domain.ShopItem
 import com.kes.app041_kt_shoppinglist.domain.ShopListRepositoryInterface
 
 class ShopListRepositoryImpl(
-    private val dao: ShopItemDAO
+    application: Application
 ): ShopListRepositoryInterface {
 
-    private val shopList = dao.getAll()
+    private val dao = AppDatabase.getInstance(application).shopItemDAO
+    private val mapper = ShopItemMapper()
 
     override suspend fun addShopItem(item: ShopItem) {
-        dao.insert(item)
+        dao.insert(mapper.mapEntityToDBModel(item))
     }
 
     override suspend fun deleteShopItem(item: ShopItem) {
-        dao.delete(item)
+        dao.delete(mapper.mapEntityToDBModel(item))
     }
 
     override suspend fun editShopItem(item: ShopItem) {
-        dao.update(item)
+        dao.insert(mapper.mapEntityToDBModel(item))
     }
 
     override suspend fun getShopItem(id: Int): ShopItem {
-        return dao.getByID(id)
+        val item = dao.getByID(id)
+        return mapper.mapDBModelToEntity(item)
     }
 
-    override fun getShopList(): LiveData<List<ShopItem>> {
-        return shopList
+    override fun getShopList(): LiveData<List<ShopItem>> = dao.getAll().map {
+        mapper.mapListDBModelToListEntity(it)
     }
 
 }

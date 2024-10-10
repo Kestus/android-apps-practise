@@ -20,7 +20,6 @@ import com.kes.app041_kt_shoppinglist.presentation.viewModel.MainViewModelFactor
 
 class MainActivity : AppCompatActivity(), ShopItemFragment.OnFragmentFinishedListener {
 
-    private lateinit var dao: ShopItemDAO
     private lateinit var repository: ShopListRepositoryImpl
 
     private lateinit var viewModel: MainViewModel
@@ -39,8 +38,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnFragmentFinishedLis
             insets
         }
         // Database
-        dao = AppDatabase.getInstance(this).shopItemDAO
-        repository = ShopListRepositoryImpl(dao)
+        repository = ShopListRepositoryImpl(application)
 
         // RecyclerView
         adapter = ShopListAdapter()

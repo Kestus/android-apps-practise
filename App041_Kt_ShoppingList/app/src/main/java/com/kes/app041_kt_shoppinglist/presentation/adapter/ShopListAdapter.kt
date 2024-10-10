@@ -62,7 +62,7 @@ class ShopListAdapter
 
     override fun getItemViewType(position: Int): Int {
         val item = getItem(position)
-        return if (item.active) {
+        return if (item.enabled) {
             ViewTypes.ACTIVE.value
         } else {
             ViewTypes.INACTIVE.value
