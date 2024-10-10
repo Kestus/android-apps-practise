@@ -2,6 +2,8 @@ package com.kes.app043_kt_coroutinesstart
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
+import android.os.Message
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -17,8 +19,6 @@ class MainActivity : AppCompatActivity() {
     private val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
-
-    private val handler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
     private fun loadCity(callback: (String)->Unit) {
         thread {
             Thread.sleep(2000)
-            handler.post {
+            Handler(Looper.getMainLooper()).post {
                 callback.invoke("Moscow")
             }
         }
@@ -63,12 +63,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadTemp(city: String, callback: (Int)->Unit) {
         thread {
-            handler.post {
-                Toast.makeText(this, "Loading temp for city: $city", Toast.LENGTH_SHORT).show()
+            runOnUiThread {
+                Toast.makeText(
+                    this,
+                    "Loading temp for city: $city",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
             Thread.sleep(2000)
-            handler.post {
-                callback.invoke(19)
+            runOnUiThread {
+                callback.invoke(6)
             }
 
         }
