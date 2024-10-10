@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -34,9 +35,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnDownload.setOnClickListener {
-            lifecycleScope.launch {
-                loadData()
-            }
+//            lifecycleScope.launch {
+//                loadData()
+//            }
+
+            loadDataWithoutCoroutines()
         }
     }
 
@@ -44,15 +47,13 @@ class MainActivity : AppCompatActivity() {
         binding.apply {
             progressBar.isVisible = true
             btnDownload.isEnabled = false
-        }
 
-        val city = loadCity()
-        binding.tvCity.text = city
+            val city = loadCity()
+            tvCity.text = city
 
-        val temp = loadTemp(city)
-        binding.tvTemp.text = temp.toString()
+            val temp = loadTemp(city)
+            tvTemp.text = temp.toString()
 
-        binding.apply {
             progressBar.isVisible = false
             btnDownload.isEnabled = true
         }
@@ -71,5 +72,53 @@ class MainActivity : AppCompatActivity() {
         ).show()
         delay(2000)
         return 9
+    }
+
+    private fun loadDataWithoutCoroutines(step: Int = 0, obj: Any? = null) {
+        when (step) {
+            0 -> {
+                Log.d("TAG", "Loading started...")
+                binding.progressBar.isVisible = true
+                binding.btnDownload.isEnabled = false
+                loadCityWithoutCoroutine {
+                    loadDataWithoutCoroutines(1, it)
+                }
+            }
+
+            1 -> {
+                val city = obj as String
+                binding.tvCity.text = city
+                loadTempWithoutCoroutine(city) {
+                    loadDataWithoutCoroutines(2, it)
+                }
+            }
+
+            2 -> {
+                val temp = obj as Int
+                binding.tvTemp.text = temp.toString()
+
+                binding.progressBar.isVisible = false
+                binding.btnDownload.isEnabled = true
+                Log.d("TAG", "Loading finished!")
+            }
+        }
+    }
+
+    private fun loadCityWithoutCoroutine(callback: (String) -> Unit) {
+        Handler(Looper.getMainLooper()).postDelayed({
+            callback.invoke("Moscow")
+        }, 2000)
+    }
+
+    private fun loadTempWithoutCoroutine(city: String, callback: (Int) -> Unit) {
+        Toast.makeText(
+            this,
+            "Loading temp for city: $city",
+            Toast.LENGTH_SHORT
+        ).show()
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            callback.invoke(9)
+        }, 2000)
     }
 }
