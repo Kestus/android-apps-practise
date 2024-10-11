@@ -10,18 +10,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.kes.app041_kt_shoppinglist.R
-import com.kes.app041_kt_shoppinglist.data.AppDatabase
-import com.kes.app041_kt_shoppinglist.data.ShopItemDAO
-import com.kes.app041_kt_shoppinglist.data.ShopListRepositoryImpl
 import com.kes.app041_kt_shoppinglist.databinding.ActivityMainBinding
 import com.kes.app041_kt_shoppinglist.presentation.adapter.ShopListAdapter
 import com.kes.app041_kt_shoppinglist.presentation.viewModel.MainViewModel
 import com.kes.app041_kt_shoppinglist.presentation.viewModel.MainViewModelFactory
 
 class MainActivity : AppCompatActivity(), ShopItemFragment.OnFragmentFinishedListener {
-
-    private lateinit var dao: ShopItemDAO
-    private lateinit var repository: ShopListRepositoryImpl
 
     private lateinit var viewModel: MainViewModel
     private lateinit var adapter: ShopListAdapter
@@ -38,10 +32,6 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnFragmentFinishedLis
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        // Database
-        dao = AppDatabase.getInstance(this).shopItemDAO
-        repository = ShopListRepositoryImpl(dao)
-
         // RecyclerView
         adapter = ShopListAdapter()
         setupRecyclerView()
@@ -49,11 +39,20 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnFragmentFinishedLis
         // ViewModel
         setupViewModel()
 
+        // Observers
+        observeShopList()
+
         // Listeners
         addItemClickListener()
         addFabClickListener()
         addItemLongClickListener()
         addItemSwipeListener()
+    }
+
+    private fun observeShopList() {
+        viewModel.shopList.observe(this) {
+            adapter.submitList(it)
+        }
     }
 
     private fun isInLandscape() = binding.shopItemContainer != null
@@ -69,11 +68,8 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnFragmentFinishedLis
     }
 
     private fun setupViewModel() {
-        val factory = MainViewModelFactory(repository)
+        val factory = MainViewModelFactory(application)
         viewModel = ViewModelProvider(this, factory)[MainViewModel::class.java]
-        viewModel.shopList.observe(this) {
-            adapter.submitList(it)
-        }
     }
 
     private fun addItemClickListener() {

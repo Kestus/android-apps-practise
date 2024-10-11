@@ -11,18 +11,17 @@ import com.kes.app041_kt_shoppinglist.domain.ShopItem
 
 @Dao
 interface ShopItemDAO {
-    @Insert
-    suspend fun insert(item: ShopItem)
+
+    @Query("SELECT * FROM shopitems ORDER BY id DESC")
+    fun getAll(): LiveData<List<ShopItemDBModel>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(item: ShopItemDBModel)
 
     @Delete
-    suspend fun delete(item: ShopItem)
+    suspend fun delete(item: ShopItemDBModel)
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun update(item: ShopItem)
+    @Query("SELECT * FROM shopitems WHERE id LIKE :id LIMIT 1")
+    suspend fun getByID(id: Int): ShopItemDBModel
 
-    @Query("SELECT * FROM shopitem WHERE id LIKE :id LIMIT 1")
-    suspend fun getByID(id: Int): ShopItem
-
-    @Query("SELECT * FROM shopitem ORDER BY id DESC")
-    fun getAll(): LiveData<List<ShopItem>>
 }

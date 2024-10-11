@@ -1,7 +1,8 @@
 package com.kes.app041_kt_shoppinglist.presentation.viewModel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kes.app041_kt_shoppinglist.data.ShopListRepositoryImpl
 import com.kes.app041_kt_shoppinglist.domain.ShopItem
@@ -11,8 +12,10 @@ import com.kes.app041_kt_shoppinglist.domain.useCases.GetShopListUseCase
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-    repository: ShopListRepositoryImpl
-): ViewModel()  {
+    application: Application
+) : AndroidViewModel(application) {
+
+    private val repository = ShopListRepositoryImpl(application)
 
     private val getShopListUseCase = GetShopListUseCase(repository)
     private val deleteShopItemUseCase = DeleteShopItemUseCase(repository)
@@ -29,7 +32,7 @@ class MainViewModel(
     }
 
     fun changeActiveState(item: ShopItem) = viewModelScope.launch {
-        val newItem = item.copy(active = !item.active)
+        val newItem = item.copy(enabled = !item.enabled)
         editShopItemUseCase.editShopItem(newItem)
     }
 
