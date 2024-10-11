@@ -20,8 +20,6 @@ import com.kes.app041_kt_shoppinglist.presentation.viewModel.MainViewModelFactor
 
 class MainActivity : AppCompatActivity(), ShopItemFragment.OnFragmentFinishedListener {
 
-    private lateinit var repository: ShopListRepositoryImpl
-
     private lateinit var viewModel: MainViewModel
     private lateinit var adapter: ShopListAdapter
 
@@ -37,9 +35,6 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnFragmentFinishedLis
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        // Database
-        repository = ShopListRepositoryImpl(application)
-
         // RecyclerView
         adapter = ShopListAdapter()
         setupRecyclerView()
@@ -47,11 +42,20 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnFragmentFinishedLis
         // ViewModel
         setupViewModel()
 
+        // Observers
+        observeShopList()
+
         // Listeners
         addItemClickListener()
         addFabClickListener()
         addItemLongClickListener()
         addItemSwipeListener()
+    }
+
+    private fun observeShopList() {
+        viewModel.shopList.observe(this) {
+            adapter.submitList(it)
+        }
     }
 
     private fun isInLandscape() = binding.shopItemContainer != null
@@ -67,11 +71,8 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnFragmentFinishedLis
     }
 
     private fun setupViewModel() {
-        val factory = MainViewModelFactory(repository)
+        val factory = MainViewModelFactory(application)
         viewModel = ViewModelProvider(this, factory)[MainViewModel::class.java]
-        viewModel.shopList.observe(this) {
-            adapter.submitList(it)
-        }
     }
 
     private fun addItemClickListener() {

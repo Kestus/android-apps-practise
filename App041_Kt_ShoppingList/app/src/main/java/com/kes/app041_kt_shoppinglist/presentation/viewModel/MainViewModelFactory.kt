@@ -1,17 +1,18 @@
 package com.kes.app041_kt_shoppinglist.presentation.viewModel
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.kes.app041_kt_shoppinglist.data.ShopListRepositoryImpl
 
 @Suppress("UNCHECKED_CAST")
 class MainViewModelFactory(
-    private val repository: ShopListRepositoryImpl
+    private val application: Application
 ): ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-            return MainViewModel(repository) as T
+            return MainViewModel(application) as T
         }
         throw IllegalArgumentException("Unknown ViewModel Class")
     }

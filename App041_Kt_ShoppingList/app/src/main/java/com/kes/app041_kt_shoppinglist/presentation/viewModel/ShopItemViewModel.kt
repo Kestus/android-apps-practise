@@ -1,5 +1,7 @@
 package com.kes.app041_kt_shoppinglist.presentation.viewModel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,12 +11,16 @@ import com.kes.app041_kt_shoppinglist.domain.ShopItem
 import com.kes.app041_kt_shoppinglist.domain.useCases.AddShopItemUseCase
 import com.kes.app041_kt_shoppinglist.domain.useCases.EditShopItemUseCase
 import com.kes.app041_kt_shoppinglist.domain.useCases.GetShopItemUseCase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 class ShopItemViewModel(
-    private val repository: ShopListRepositoryImpl
-) : ViewModel() {
+    application: Application
+) : AndroidViewModel(application) {
 
+    private val repository = ShopListRepositoryImpl(application)
 
     private val getShopItemUseCase = GetShopItemUseCase(repository)
     private val addShopItemUseCase = AddShopItemUseCase(repository)
@@ -34,7 +40,6 @@ class ShopItemViewModel(
 
     private var _finished = MutableLiveData<Unit>()
     val finished: LiveData<Unit> get() = _finished
-
 
     fun getShopItem(id: Int) = viewModelScope.launch  {
         val item = getShopItemUseCase.getShopItem(id)

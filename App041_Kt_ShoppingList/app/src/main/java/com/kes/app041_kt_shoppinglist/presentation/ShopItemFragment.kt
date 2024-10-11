@@ -22,11 +22,6 @@ class ShopItemFragment : Fragment() {
     // ViewModel
     private lateinit var shopItemViewModel: ShopItemViewModel
 
-    // DB
-    private lateinit var db: AppDatabase
-    private lateinit var dao: ShopItemDAO
-    private lateinit var repository: ShopListRepositoryImpl
-
     private var _binding: FragmentShopItemBinding? = null
     private val binding: FragmentShopItemBinding
         get() = _binding ?: throw RuntimeException("FragmentShopItemBinding == null")
@@ -40,8 +35,6 @@ class ShopItemFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        // DB and VM
-        initRepository()
 
         if (context is OnFragmentFinishedListener) {
             onFragmentFinished = context
@@ -64,7 +57,7 @@ class ShopItemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        shopItemViewModel = ShopItemViewModelFactory(repository).create(ShopItemViewModel::class.java)
+        shopItemViewModel = ShopItemViewModelFactory(requireActivity().application).create(ShopItemViewModel::class.java)
         binding.viewModel = shopItemViewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
@@ -80,12 +73,6 @@ class ShopItemFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun initRepository() {
-        db = context?.let { AppDatabase.getInstance(it) }!!
-        dao = db.shopItemDAO
-        repository = ShopListRepositoryImpl(dao)
     }
 
     private fun addLoadingStateObserver() {

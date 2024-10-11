@@ -1,5 +1,7 @@
 package com.kes.app041_kt_shoppinglist.presentation.viewModel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,11 +10,16 @@ import com.kes.app041_kt_shoppinglist.domain.ShopItem
 import com.kes.app041_kt_shoppinglist.domain.useCases.DeleteShopItemUseCase
 import com.kes.app041_kt_shoppinglist.domain.useCases.EditShopItemUseCase
 import com.kes.app041_kt_shoppinglist.domain.useCases.GetShopListUseCase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-    repository: ShopListRepositoryImpl
-): ViewModel()  {
+    application: Application
+): AndroidViewModel(application) {
+
+    private val repository = ShopListRepositoryImpl(application)
 
     private val getShopListUseCase = GetShopListUseCase(repository)
     private val deleteShopItemUseCase = DeleteShopItemUseCase(repository)
