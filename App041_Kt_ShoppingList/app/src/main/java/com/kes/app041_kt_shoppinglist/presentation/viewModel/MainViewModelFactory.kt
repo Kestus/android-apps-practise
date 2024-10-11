@@ -3,12 +3,11 @@ package com.kes.app041_kt_shoppinglist.presentation.viewModel
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.kes.app041_kt_shoppinglist.data.ShopListRepositoryImpl
 
 @Suppress("UNCHECKED_CAST")
 class MainViewModelFactory(
     private val application: Application
-): ViewModelProvider.Factory {
+) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {

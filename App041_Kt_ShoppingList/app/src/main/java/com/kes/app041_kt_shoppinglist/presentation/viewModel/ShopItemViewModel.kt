@@ -4,16 +4,12 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kes.app041_kt_shoppinglist.data.ShopListRepositoryImpl
 import com.kes.app041_kt_shoppinglist.domain.ShopItem
 import com.kes.app041_kt_shoppinglist.domain.useCases.AddShopItemUseCase
 import com.kes.app041_kt_shoppinglist.domain.useCases.EditShopItemUseCase
 import com.kes.app041_kt_shoppinglist.domain.useCases.GetShopItemUseCase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 class ShopItemViewModel(
@@ -41,7 +37,7 @@ class ShopItemViewModel(
     private var _finished = MutableLiveData<Unit>()
     val finished: LiveData<Unit> get() = _finished
 
-    fun getShopItem(id: Int) = viewModelScope.launch  {
+    fun getShopItem(id: Int) = viewModelScope.launch {
         val item = getShopItemUseCase.getShopItem(id)
         _currentShopItem.value = item
     }
@@ -76,7 +72,7 @@ class ShopItemViewModel(
         }
     }
 
-    private fun launchToFinish(task: suspend ()->Unit) {
+    private fun launchToFinish(task: suspend () -> Unit) {
         _loading.value = true
         viewModelScope.launch {
             task.invoke()

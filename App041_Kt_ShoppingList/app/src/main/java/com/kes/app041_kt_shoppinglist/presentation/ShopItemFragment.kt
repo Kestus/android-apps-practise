@@ -9,9 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.kes.app041_kt_shoppinglist.data.AppDatabase
-import com.kes.app041_kt_shoppinglist.data.ShopItemDAO
-import com.kes.app041_kt_shoppinglist.data.ShopListRepositoryImpl
 import com.kes.app041_kt_shoppinglist.databinding.FragmentShopItemBinding
 import com.kes.app041_kt_shoppinglist.domain.ShopItem
 import com.kes.app041_kt_shoppinglist.presentation.viewModel.ShopItemViewModel
@@ -57,7 +54,8 @@ class ShopItemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        shopItemViewModel = ShopItemViewModelFactory(requireActivity().application).create(ShopItemViewModel::class.java)
+        shopItemViewModel =
+            ShopItemViewModelFactory(requireActivity().application).create(ShopItemViewModel::class.java)
         binding.viewModel = shopItemViewModel
         binding.lifecycleOwner = viewLifecycleOwner
 

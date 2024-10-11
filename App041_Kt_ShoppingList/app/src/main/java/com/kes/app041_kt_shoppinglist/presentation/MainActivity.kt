@@ -10,9 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.kes.app041_kt_shoppinglist.R
-import com.kes.app041_kt_shoppinglist.data.AppDatabase
-import com.kes.app041_kt_shoppinglist.data.ShopItemDAO
-import com.kes.app041_kt_shoppinglist.data.ShopListRepositoryImpl
 import com.kes.app041_kt_shoppinglist.databinding.ActivityMainBinding
 import com.kes.app041_kt_shoppinglist.presentation.adapter.ShopListAdapter
 import com.kes.app041_kt_shoppinglist.presentation.viewModel.MainViewModel
