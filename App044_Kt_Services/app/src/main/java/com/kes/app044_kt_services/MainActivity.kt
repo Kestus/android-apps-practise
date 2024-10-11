@@ -1,6 +1,5 @@
 package com.kes.app044_kt_services
 
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
@@ -8,9 +7,11 @@ import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.kes.app044_kt_services.databinding.ActivityMainBinding
+import com.kes.app044_kt_services.services.MyForegroundService
 import com.kes.app044_kt_services.services.MyService
 
 class MainActivity : AppCompatActivity() {
@@ -30,35 +31,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.simpleService.setOnClickListener {
+            stopService(MyForegroundService.newIntent(this))
             startService(MyService.newIntent(this, 25))
         }
 
         binding.foregroundService.setOnClickListener {
-            showNotification()
-        }
-    }
-
-    private fun showNotification() {
-        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificationChannel = NotificationChannel(
-                CHANNEL_ID,
-                CHANNEL_NAME,
-                NotificationManager.IMPORTANCE_DEFAULT
+            ContextCompat.startForegroundService(
+                this,
+                MyForegroundService.newIntent(this)
             )
-            notificationManager.createNotificationChannel(notificationChannel)
         }
-        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Title")
-            .setContentText("Text")
-            .setSmallIcon(R.drawable.ic_launcher_background)
-            .build()
-
-        notificationManager.notify(1, notification)
-    }
-
-    companion object {
-        private const val CHANNEL_ID = "channel_id"
-        private const val CHANNEL_NAME = "channel_name"
     }
 }
