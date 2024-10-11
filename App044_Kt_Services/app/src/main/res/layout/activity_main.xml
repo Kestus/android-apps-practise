@@ -33,10 +33,11 @@
         />
 
     <Button
+        android:id="@+id/intent_service"
         android:layout_width="324dp"
         android:layout_height="wrap_content"
         android:backgroundTint="#FF5252"
-        android:text="Service"
+        android:text="Intent Service"
         android:textSize="24sp"
         android:textStyle="bold"
         android:fontFamily="serif"

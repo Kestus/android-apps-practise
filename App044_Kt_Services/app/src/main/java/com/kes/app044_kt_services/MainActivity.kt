@@ -12,6 +12,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.kes.app044_kt_services.databinding.ActivityMainBinding
 import com.kes.app044_kt_services.services.MyForegroundService
+import com.kes.app044_kt_services.services.MyIntentService
 import com.kes.app044_kt_services.services.MyService
 
 class MainActivity : AppCompatActivity() {
@@ -39,6 +40,13 @@ class MainActivity : AppCompatActivity() {
             ContextCompat.startForegroundService(
                 this,
                 MyForegroundService.newIntent(this)
+            )
+        }
+
+        binding.intentService.setOnClickListener {
+            ContextCompat.startForegroundService(
+                this,
+                MyIntentService.newIntent(this)
             )
         }
     }

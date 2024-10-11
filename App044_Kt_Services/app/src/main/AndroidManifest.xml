@@ -29,6 +29,10 @@
         <service
             android:name=".services.MyForegroundService"
             android:foregroundServiceType="shortService" />
+        <service
+            android:name=".services.MyIntentService"
+            android:foregroundServiceType="shortService" />
+
     </application>
 
 </manifest>
