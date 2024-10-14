@@ -14,6 +14,8 @@ import androidx.core.view.WindowInsetsCompat
 import com.kes.app044_kt_services.databinding.ActivityMainBinding
 import com.kes.app044_kt_services.services.MyForegroundService
 import com.kes.app044_kt_services.services.MyIntentService
+import com.kes.app044_kt_services.services.MyIntentJobSchedulerService
+import com.kes.app044_kt_services.services.MyJobIntentService
 import com.kes.app044_kt_services.services.MyJobService
 import com.kes.app044_kt_services.services.MyService
 
@@ -66,7 +68,13 @@ class MainActivity : AppCompatActivity() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val intent = MyJobService.newIntent(page++)
                 jobScheduler.enqueue(jobInfo, JobWorkItem(intent))
+            } else {
+                startService(MyIntentJobSchedulerService.newIntent(this, page++))
             }
+        }
+
+        binding.jobIntentService.setOnClickListener {
+            MyJobIntentService.enqueue(this, page)
         }
     }
 }
