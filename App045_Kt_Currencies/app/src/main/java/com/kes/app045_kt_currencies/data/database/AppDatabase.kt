@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.kes.app045_kt_currencies.data.database.dao.CurrencyDao
 import com.kes.app045_kt_currencies.data.database.dao.RelativePriceDao
+import com.kes.app045_kt_currencies.data.database.dao.TestingDao
 import com.kes.app045_kt_currencies.data.database.entity.CurrencyDBModel
 import com.kes.app045_kt_currencies.data.database.entity.CurrencyWithPrices
 import com.kes.app045_kt_currencies.data.database.entity.RelativePriceDBModel
@@ -13,16 +14,17 @@ import com.kes.app045_kt_currencies.data.database.entity.RelativePriceDBModel
 @Database(
     entities = [
         CurrencyDBModel::class,
-        CurrencyWithPrices::class,
         RelativePriceDBModel::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase: RoomDatabase() {
 
     abstract val currencyDao: CurrencyDao
     abstract val pricesDao: RelativePriceDao
+
+    abstract val testingDao: TestingDao
 
     companion object {
         private var INSTANCE: AppDatabase? = null
@@ -40,7 +42,9 @@ abstract class AppDatabase: RoomDatabase() {
                     application,
                     AppDatabase::class.java,
                     DB_NAME
-                ).build()
+                )
+                    .fallbackToDestructiveMigration()
+                    .build()
 
                 INSTANCE = db
                 return db

@@ -2,6 +2,7 @@ package com.kes.app045_kt_currencies.data.database.entity
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.kes.app045_kt_currencies.data.database.AppDatabase
 
@@ -16,17 +17,16 @@ import com.kes.app045_kt_currencies.data.database.AppDatabase
         ),
         ForeignKey(
             entity = CurrencyDBModel::class,
-            parentColumns = ["code"],
-            childColumns = ["priceCurrencyCode"],
+            parentColumns = ["currencyId"],
+            childColumns = ["priceCurrencyId"],
             onDelete = ForeignKey.CASCADE
         )
-    ]
+    ],
+    primaryKeys = ["baseCurrencyId", "priceCurrencyId"],
+    indices = [Index(value = ["priceCurrencyId"])]
 )
 data class RelativePriceDBModel(
     val baseCurrencyId: Long,
-    val priceCurrencyCode: String,
+    val priceCurrencyId: String,
     val price: Double,
-
-    @PrimaryKey(autoGenerate = true)
-    val priceId: Long = AppDatabase.UNDEFINED_ID
 )

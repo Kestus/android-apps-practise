@@ -16,6 +16,6 @@ interface RelativePriceDao {
     fun insertRelativePrice(price: RelativePriceDBModel)
 
     @Transaction
-    @Query("SELECT * FROM prices WHERE baseCurrencyId = :currencyId")
-    fun getCurrencyWithPrices(currencyId: Long): LiveData<CurrencyWithPrices>
+    @Query("SELECT * FROM currencies WHERE currencyId = :currencyId LIMIT 1")
+    fun getCurrencyWithPrices(currencyId: Long): List<CurrencyWithPrices>
 }
