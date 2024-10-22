@@ -1,46 +1,33 @@
 package com.kes.app045_kt_currencies.data
 
+import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
+import com.kes.app045_kt_currencies.data.database.AppDatabase
+import com.kes.app045_kt_currencies.data.database.entity.CurrencyDBModel
 import com.kes.app045_kt_currencies.data.mapper.CurrencyMapper
 import com.kes.app045_kt_currencies.data.network.ApiFactory
 import com.kes.app045_kt_currencies.domain.Repository
 import com.kes.app045_kt_currencies.domain.model.CurrencyItem
 import com.kes.app045_kt_currencies.domain.model.RelativePriceList
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class RepositoryImpl() : Repository {
+class RepositoryImpl(application: Application) : Repository {
 
+    private val database = AppDatabase.getInstance(application)
+    private val currencyDao = database.currencyDao
 
-    private val apiService = ApiFactory.getService()
+    private val scope = CoroutineScope(Dispatchers.IO)
 
     override fun getAll(): LiveData<List<CurrencyItem>> {
-        val liveData: MutableLiveData<List<CurrencyItem>> = MutableLiveData()
-        apiService.getLatest().enqueue(object : Callback<Map<String, String>> {
-            override fun onResponse(
-                p0: Call<Map<String, String>>,
-                p1: Response<Map<String, String>>
-            ) {
-                val data = p1.body() ?: return onFailure(p0, Throwable("api call returned empty"))
-
-                liveData.value = data
-                    .filter {
-                        it.key.length == 3
-                    }
-                    .map { CurrencyMapper.mapEntryToDBModel(it) }
-                    .map { CurrencyMapper.mapDBModelToItem(it) }
-
-            }
-
-            override fun onFailure(p0: Call<Map<String, String>>, p1: Throwable) {
-                Log.e("ERROR_API", p1.message.toString())
-            }
-        })
-
-        return liveData
+        return currencyDao.getAll().map { CurrencyMapper.mapDBModelToItemList(it) }
     }
 
     override fun getCurrencyByID(id: Int): CurrencyItem {
@@ -52,6 +39,22 @@ class RepositoryImpl() : Repository {
     }
 
     override fun getRelativePrice(code: String): RelativePriceList {
+        TODO("Not yet implemented")
+    }
+
+    override fun updatePricesForCurrency(code: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun saveCurrency(currency: CurrencyItem) {
+        currencyDao.insertCurrency(CurrencyMapper.mapItemToDBModel(currency))
+    }
+
+    override suspend fun saveCurrency(currencyList: List<CurrencyItem>) {
+        currencyDao.insertCurrencyList(CurrencyMapper.mapItemToDBModelList(currencyList))
+    }
+
+    override fun updateCurrency(currency: CurrencyItem) {
         TODO("Not yet implemented")
     }
 }
