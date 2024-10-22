@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -33,6 +35,9 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -45,4 +50,35 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+
+    // Retrofit2
+    val retrofitVersion = "2.11.0"
+    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
+    // Gson
+    implementation("com.google.code.gson:gson:$retrofitVersion")
+    // Gson converter
+    implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
+
+    // Room
+    val roomVersion = "2.6.1"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    ksp("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+
+    // Work Manager
+    val workVersion = "2.9.1"
+    implementation("androidx.work:work-runtime-ktx:$workVersion")
+
+    // LifeCycle
+    val lifecycleVersion = "2.8.6"
+    // ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel:$lifecycleVersion")
+    // LiveData
+    implementation("androidx.lifecycle:lifecycle-livedata:$lifecycleVersion")
+    // Annotation processor
+    ksp("androidx.lifecycle:lifecycle-compiler:$lifecycleVersion")
+
+
 }
