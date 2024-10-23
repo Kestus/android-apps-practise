@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">App045_Kt_Currencies</string>
+    <string name="search">Search</string>
+    <string name="btn_options_description">button show more options</string>
 </resources>
