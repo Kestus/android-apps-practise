@@ -5,7 +5,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 
 @Dao
-interface TestingDao {
+interface TestDao {
 
     @Query("DELETE FROM currencies")
     suspend fun deleteAllCurrencies()
@@ -15,8 +15,8 @@ interface TestingDao {
 
     @Transaction
     suspend fun deleteAll() {
-        deleteAllPrices()
-        deleteAllCurrencies()
+//        deleteAllPrices()
+//        deleteAllCurrencies()
     }
 
 }

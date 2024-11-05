@@ -1,9 +1,8 @@
 package com.kes.app045_kt_currencies.data.network
 
 import com.kes.app045_kt_currencies.data.network.model.CurrenciesResult
-import com.kes.app045_kt_currencies.data.network.model.PriceListResult
+import com.kes.app045_kt_currencies.data.network.model.PriceListResponse
 import retrofit2.Call
-import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Path
 
@@ -11,10 +10,10 @@ import retrofit2.http.Path
 interface ApiService {
 
     @GET("/npm/@fawazahmed0/currency-api@latest/v1/currencies.json")
-    fun getLatest(): Call<Map<String, String>>
+    fun getLatest(): Call<CurrenciesResult>
 
     @GET("/npm/@fawazahmed0/currency-api@latest/v1/currencies/{code}.json")
-    fun getCurrency(@Path("code") code: String): Call<PriceListResult>
+    fun getCurrency(@Path("code") code: String): Call<PriceListResponse>
 
     /**
      * @param date - Date format: YYYY-MM-DD
@@ -23,7 +22,7 @@ interface ApiService {
     fun getCurrencyByDate(
         @Path("code") code: String,
         @Path("date") date: String
-    ): Call<PriceListResult>
+    ): Call<PriceListResponse>
 
 }
 

@@ -11,7 +11,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.kes.app045_kt_currencies.databinding.ActivityMainBinding
 import com.kes.app045_kt_currencies.presentation.adapters.CurrencyListAdapter
 import com.kes.app045_kt_currencies.presentation.viewModel.MainViewModel
-import com.kes.app045_kt_currencies.presentation.viewModel.MainViewModelFactory
+import com.kes.app045_kt_currencies.presentation.viewModel.AppViewModelFactory
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
         ActivityMainBinding.inflate(layoutInflater)
     }
     private val viewModel by lazy {
-        MainViewModelFactory(application).create(MainViewModel::class.java)
+        AppViewModelFactory(application).create(MainViewModel::class.java)
     }
     private lateinit var adapter: CurrencyListAdapter
 
@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity() {
 
         observeCurrencyList()
         setupSearchInputListener()
+        setupItemOnClickListener()
 
 
     }
@@ -53,6 +54,12 @@ class MainActivity : AppCompatActivity() {
             val visibility = if (it) View.VISIBLE
             else View.GONE
             binding.progressBar.visibility = visibility
+        }
+    }
+
+    private fun setupItemOnClickListener() {
+        adapter.onItemClickListener = {
+            startActivity(CurrencyActivity.newIntent(this, it))
         }
     }
 

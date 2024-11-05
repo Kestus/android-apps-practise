@@ -11,6 +11,8 @@ import com.kes.app045_kt_currencies.domain.model.CurrencyItem
 class CurrencyListAdapter :
     ListAdapter<CurrencyItem, CurrencyListAdapter.ViewHolder>(DiffCallback()) {
 
+    var onItemClickListener: ((CurrencyItem) -> Unit)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = CurrencyCardBinding.inflate(
             LayoutInflater.from(parent.context),
@@ -24,8 +26,12 @@ class CurrencyListAdapter :
         val item = getItem(position)
         val binding = holder.binding
 
-        binding.currencyCode.text = item.code
+        binding.currencyCode.text = item.code.uppercase()
         binding.currencyName.text = item.name
+
+        binding.root.apply {
+            setOnClickListener { onItemClickListener?.invoke(item) }
+        }
     }
 
     class ViewHolder(val binding: CurrencyCardBinding) : RecyclerView.ViewHolder(binding.root)

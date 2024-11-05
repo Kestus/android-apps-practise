@@ -19,9 +19,9 @@ import kotlinx.coroutines.launch
 class MainViewModel(private val application: Application) : AndroidViewModel(application) {
 
     private val repository = RepositoryImpl(application)
+    private val workManager by lazy { WorkManager.getInstance(application) }
 
     private val getCurrencyList = GetCurrencyListUseCase(repository)
-    private val saveCurrency = SaveCurrencyUseCase(repository)
 
     private val _currencyList: LiveData<List<CurrencyItem>> = getCurrencyList()
 
@@ -43,7 +43,6 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
     }
 
     fun startUpdateCurrencyWork() {
-        val workManager = WorkManager.getInstance(application)
         workManager.enqueueUniqueWork(
             CurrencyUpdateWorker.WORK_NAME,
             ExistingWorkPolicy.KEEP,

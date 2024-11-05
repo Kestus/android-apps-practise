@@ -9,10 +9,19 @@ import com.kes.app045_kt_currencies.data.database.AppDatabase
     tableName = "currencies",
     indices = [Index(value = ["code"], unique = true)]
 )
-data class CurrencyDBModel (
+data class CurrencyDBModel(
+    @PrimaryKey(autoGenerate = true)
+    val currencyId: Long,
     val code: String,
     val name: String,
-    @PrimaryKey(autoGenerate = true)
-    val currencyId: Long = AppDatabase.UNDEFINED_ID,
-    val favourite: Boolean = false,
-)
+    val favourite: Boolean,
+    var pricesUpdatedAt: String?,
+) {
+    constructor(code: String, name: String) : this(
+        currencyId = AppDatabase.UNDEFINED_ID,
+        code = code,
+        name = name,
+        favourite = false,
+        pricesUpdatedAt = null,
+    )
+}
