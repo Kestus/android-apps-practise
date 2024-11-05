@@ -1,16 +1,15 @@
 package com.kes.app045_kt_currencies.domain
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.kes.app045_kt_currencies.domain.model.CurrencyItem
-import com.kes.app045_kt_currencies.domain.model.RelativePriceList
 
 interface Repository {
 
-    fun getAll(): List<CurrencyItem>
+    fun getAll(): LiveData<List<CurrencyItem>>
 
-    fun getCurrencyByID(id: Int): CurrencyItem
+    fun saveCurrency(currency: CurrencyItem)
 
-    fun getCurrencyByCode(code: String): CurrencyItem
-
-    fun getRelativePrice(code: String): RelativePriceList
+    fun saveCurrency(currencyList: List<CurrencyItem>)
 
 }

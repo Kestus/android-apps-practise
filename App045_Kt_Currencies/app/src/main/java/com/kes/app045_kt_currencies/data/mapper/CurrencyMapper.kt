@@ -18,7 +18,8 @@ object CurrencyMapper {
         return CurrencyItem(
             id = AppDatabase.UNDEFINED_ID,
             code = entry.key,
-            name = entry.value
+            name = entry.value,
+            priceList = null
         )
     }
 
@@ -26,8 +27,9 @@ object CurrencyMapper {
         return CurrencyDBModel(
             currencyId = item.id,
             code = item.code,
-            name = item.name
-
+            name = item.name,
+            favourite = item.favourite,
+            pricesUpdatedAt = item.pricesUpdatedAt
         )
     }
 
@@ -35,7 +37,7 @@ object CurrencyMapper {
         return CurrencyItem(
             id = model.currencyId,
             code = model.code,
-            name = model.name
+            name = model.name,
         )
     }
 

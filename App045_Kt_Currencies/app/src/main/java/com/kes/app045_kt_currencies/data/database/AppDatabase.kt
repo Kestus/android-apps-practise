@@ -6,9 +6,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.kes.app045_kt_currencies.data.database.dao.CurrencyDao
 import com.kes.app045_kt_currencies.data.database.dao.RelativePriceDao
-import com.kes.app045_kt_currencies.data.database.dao.TestingDao
+import com.kes.app045_kt_currencies.data.database.dao.TestDao
 import com.kes.app045_kt_currencies.data.database.entity.CurrencyDBModel
-import com.kes.app045_kt_currencies.data.database.entity.CurrencyWithPrices
 import com.kes.app045_kt_currencies.data.database.entity.RelativePriceDBModel
 
 @Database(
@@ -16,7 +15,7 @@ import com.kes.app045_kt_currencies.data.database.entity.RelativePriceDBModel
         CurrencyDBModel::class,
         RelativePriceDBModel::class
     ],
-    version = 2,
+    version = 5,
     exportSchema = false
 )
 abstract class AppDatabase: RoomDatabase() {
@@ -24,7 +23,7 @@ abstract class AppDatabase: RoomDatabase() {
     abstract val currencyDao: CurrencyDao
     abstract val pricesDao: RelativePriceDao
 
-    abstract val testingDao: TestingDao
+    abstract val testingDao: TestDao
 
     companion object {
         private var INSTANCE: AppDatabase? = null

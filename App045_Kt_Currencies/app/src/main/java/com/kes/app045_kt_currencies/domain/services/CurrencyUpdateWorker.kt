@@ -8,9 +8,12 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.kes.app045_kt_currencies.data.RepositoryImpl
+import com.kes.app045_kt_currencies.data.ServiceRepositoryImpl
 import com.kes.app045_kt_currencies.data.mapper.CurrencyMapper
 import com.kes.app045_kt_currencies.data.network.ApiFactory
+import com.kes.app045_kt_currencies.data.network.model.CurrenciesResult
 import com.kes.app045_kt_currencies.domain.Repository
+import com.kes.app045_kt_currencies.domain.ServiceRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,41 +23,35 @@ import retrofit2.Response
 
 class CurrencyUpdateWorker(
     context: Context,
-    private val workerParameters: WorkerParameters
+    workerParameters: WorkerParameters
 ) : Worker(context, workerParameters) {
 
     override fun doWork(): Result {
-        var result = Result.success()
+        val response = apiService.getLatest().execute()
 
-        apiService.getLatest().enqueue(object : Callback<Map<String, String>> {
-            override fun onResponse(
-                p0: Call<Map<String, String>>,
-                p1: Response<Map<String, String>>
-            ) {
-                val data = p1.body() ?: return onFailure(p0, Throwable("api call returned empty"))
-                // save data to db
-                data.filter { it.key.length == 3 }    // filter-out non three-letter codes
-                    .filter { it.value.isNotEmpty() } // filter-out empty names
-                    .map { CurrencyMapper.mapEntryToItem(it) }
-                    .apply {
-                        ioScope.launch { repository.saveCurrency(this@apply) }
-                    }
+        if (!response.isSuccessful || response.body() == null) {
+            Log.e("ERROR_API", response.message())
+            return Result.failure()
+        }
 
+        val data = response.body()!!
+
+        // filter and save data to db
+        data.filter { it.key.length == 3 }    // filter-out non three-letter codes
+            .filter { it.value.isNotEmpty() } // filter-out empty names
+            .filter { !it.value.contains("(coin)".toRegex(RegexOption.IGNORE_CASE)) } // filter-out "coins"
+            .map { CurrencyMapper.mapEntryToDBModel(it) }
+            .apply {
+                repository.insertCurrency(this@apply)
             }
 
-            override fun onFailure(p0: Call<Map<String, String>>, p1: Throwable) {
-                Log.e("ERROR_API", p1.message.toString())
-                result = Result.failure()
-            }
-        })
-        return result
+        return Result.success()
     }
 
     companion object {
         const val WORK_NAME = "currency updates work"
-        private val ioScope = CoroutineScope(Dispatchers.IO)
 
-        private var _repository: Repository? = null
+        private var _repository: ServiceRepository? = null
         private val repository by lazy {
             _repository!!
         }
@@ -64,7 +61,7 @@ class CurrencyUpdateWorker(
         }
 
         fun makeRequest(application: Application): OneTimeWorkRequest {
-            _repository = RepositoryImpl(application)
+            _repository = ServiceRepositoryImpl(application)
             return OneTimeWorkRequestBuilder<CurrencyUpdateWorker>()
                 .build()
         }
