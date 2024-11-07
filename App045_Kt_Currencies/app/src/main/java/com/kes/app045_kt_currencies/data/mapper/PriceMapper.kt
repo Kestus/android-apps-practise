@@ -2,10 +2,11 @@ package com.kes.app045_kt_currencies.data.mapper
 
 import com.kes.app045_kt_currencies.data.database.entity.RelativePriceDBModel
 import com.kes.app045_kt_currencies.data.network.model.PriceListResponse
+import com.kes.app045_kt_currencies.domain.model.RelativePriceItem
 
-object PriceListMapper {
+object PriceMapper {
 
-    fun responseToDBModel(data: PriceListResponse): List<RelativePriceDBModel> {
+    fun responseToDBModelList(data: PriceListResponse): List<RelativePriceDBModel> {
         val list = mutableListOf<RelativePriceDBModel>()
         val baseCurrencyCode = data.baseCurrencyCode!!
 
@@ -21,4 +22,11 @@ object PriceListMapper {
         return list
     }
 
+    fun dbModelToItemList(data: List<RelativePriceDBModel>): List<RelativePriceItem> {
+        return data.map { dbModelToItem(it) }
+    }
+
+    fun dbModelToItem(data: RelativePriceDBModel): RelativePriceItem {
+        return RelativePriceItem(data.priceCurrencyCode, data.price)
+    }
 }

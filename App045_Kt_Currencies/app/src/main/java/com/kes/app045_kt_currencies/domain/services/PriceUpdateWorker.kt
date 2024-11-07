@@ -15,7 +15,7 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.google.gson.Gson
 import com.kes.app045_kt_currencies.data.ServiceRepositoryImpl
-import com.kes.app045_kt_currencies.data.mapper.PriceListMapper
+import com.kes.app045_kt_currencies.data.mapper.PriceMapper
 import com.kes.app045_kt_currencies.data.network.ApiFactory
 import com.kes.app045_kt_currencies.domain.ServiceRepository
 import java.util.concurrent.TimeUnit
@@ -43,9 +43,10 @@ class PriceUpdateWorker(
             priceListResponse.filterPriceMap(availableCurrencyCodes)
 
             // Select base currency from db
-            val dbData = repository.getCurrencyWithPricesByCode(priceListResponse.baseCurrencyCode!!)
+            val dbData =
+                repository.getCurrencyWithPricesByCode(priceListResponse.baseCurrencyCode!!)
             // map response to db model
-            val prices = PriceListMapper.responseToDBModel(priceListResponse)
+            val prices = PriceMapper.responseToDBModelList(priceListResponse)
 
             // update prices
             val updatedAt = priceListResponse.date!!
@@ -102,7 +103,7 @@ class PriceUpdateWorker(
         fun makeRequest(
             application: Application,
             code: String
-        ) : OneTimeWorkRequest {
+        ): OneTimeWorkRequest {
             return makeRequest(application, listOf(code))
         }
 

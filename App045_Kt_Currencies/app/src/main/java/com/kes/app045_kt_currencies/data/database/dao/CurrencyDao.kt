@@ -28,7 +28,7 @@ interface CurrencyDao {
     @Query("SELECT * FROM currencies ORDER BY code")
     fun getAll(): List<CurrencyDBModel>
 
-    @Query("SELECT * FROM currencies ORDER BY code")
+    @Query("SELECT * FROM currencies ORDER BY favourite DESC, code")
     fun getAllLiveData(): LiveData<List<CurrencyDBModel>>
 
     @Query("SELECT code FROM currencies")
@@ -39,6 +39,9 @@ interface CurrencyDao {
 
     @Query("SELECT * FROM currencies WHERE currencyId = :currencyId LIMIT 1")
     fun getCurrencyById(currencyId: Long): CurrencyDBModel
+
+    @Query("SELECT * FROM currencies WHERE code = :code LIMIT 1")
+    fun getCurrencyByCodeLiveData(code: String): LiveData<CurrencyDBModel>
 
     @Query("SELECT * FROM currencies WHERE code = :currencyCode LIMIT 1")
     fun getCurrencyByCode(currencyCode: String): CurrencyDBModel

@@ -1,15 +1,17 @@
 package com.kes.app045_kt_currencies.domain
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.kes.app045_kt_currencies.domain.model.CurrencyItem
+import com.kes.app045_kt_currencies.domain.model.RelativePriceItem
 
 interface Repository {
 
     fun getAll(): LiveData<List<CurrencyItem>>
 
-    fun saveCurrency(currency: CurrencyItem)
+    fun updateCurrency(currency: CurrencyItem)
 
-    fun saveCurrency(currencyList: List<CurrencyItem>)
+    fun getCurrencyByCode(code: String): LiveData<CurrencyItem>
+
+    fun getPriceList(baseCurrencyId: String): LiveData<List<RelativePriceItem>>
 
 }

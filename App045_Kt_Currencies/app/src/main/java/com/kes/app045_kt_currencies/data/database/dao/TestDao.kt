@@ -15,8 +15,8 @@ interface TestDao {
 
     @Transaction
     suspend fun deleteAll() {
-//        deleteAllPrices()
-//        deleteAllCurrencies()
+        deleteAllPrices()
+        deleteAllCurrencies()
     }
 
 }

@@ -13,7 +13,6 @@ import com.kes.app045_kt_currencies.data.database.AppDatabase
 import com.kes.app045_kt_currencies.domain.model.CurrencyItem
 import com.kes.app045_kt_currencies.domain.services.CurrencyUpdateWorker
 import com.kes.app045_kt_currencies.domain.useCases.GetCurrencyListUseCase
-import com.kes.app045_kt_currencies.domain.useCases.SaveCurrencyUseCase
 import kotlinx.coroutines.launch
 
 class MainViewModel(private val application: Application) : AndroidViewModel(application) {
@@ -26,6 +25,7 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
     private val _currencyList: LiveData<List<CurrencyItem>> = getCurrencyList()
 
     private var _searchInput = MutableLiveData<String?>(null)
+
 
     val loading = MediatorLiveData<Boolean>().apply {
         addSource(_currencyList) {

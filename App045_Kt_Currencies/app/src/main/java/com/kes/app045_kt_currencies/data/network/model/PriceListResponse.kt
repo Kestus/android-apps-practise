@@ -42,7 +42,9 @@ data class PriceListResponse(
 
     fun filterPriceMap(currencyCodes: List<String>) {
         priceMap?.let { map ->
-            priceMap = map.filterKeys { currencyCodes.contains(it) }
+            priceMap =
+                map.filterKeys { currencyCodes.contains(it) }    // filter-out currencies not already in db
+                   .filterKeys { it != baseCurrencyCode }        // filter-out self price
         }
     }
 

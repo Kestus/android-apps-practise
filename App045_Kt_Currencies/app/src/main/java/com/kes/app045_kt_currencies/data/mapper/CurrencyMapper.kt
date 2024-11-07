@@ -19,7 +19,8 @@ object CurrencyMapper {
             id = AppDatabase.UNDEFINED_ID,
             code = entry.key,
             name = entry.value,
-            priceList = null
+            favourite = false,
+            pricesUpdatedAt = null,
         )
     }
 
@@ -38,6 +39,8 @@ object CurrencyMapper {
             id = model.currencyId,
             code = model.code,
             name = model.name,
+            pricesUpdatedAt = model.pricesUpdatedAt,
+            favourite = model.favourite,
         )
     }
 

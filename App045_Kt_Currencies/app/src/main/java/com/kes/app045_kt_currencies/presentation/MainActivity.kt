@@ -8,10 +8,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.RecyclerView
 import com.kes.app045_kt_currencies.databinding.ActivityMainBinding
 import com.kes.app045_kt_currencies.presentation.adapters.CurrencyListAdapter
-import com.kes.app045_kt_currencies.presentation.viewModel.MainViewModel
 import com.kes.app045_kt_currencies.presentation.viewModel.AppViewModelFactory
+import com.kes.app045_kt_currencies.presentation.viewModel.MainViewModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,17 +33,29 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        viewModel.deleteAll()
-        adapter = CurrencyListAdapter()
 
+//        viewModel.deleteAll()
+
+        setupAdapter()
         binding.recyclerView.adapter = adapter
         viewModel.startUpdateCurrencyWork()
 
         observeCurrencyList()
         setupSearchInputListener()
         setupItemOnClickListener()
+    }
 
-
+    private fun setupAdapter() {
+        adapter = CurrencyListAdapter()
+        adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
+                if (fromPosition >= toPosition) {
+                    binding.recyclerView.scrollToPosition(toPosition)
+                } else {
+                    binding.recyclerView.scrollToPosition(fromPosition)
+                }
+            }
+        })
     }
 
     private fun observeCurrencyList() {
@@ -59,7 +72,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupItemOnClickListener() {
         adapter.onItemClickListener = {
-            startActivity(CurrencyActivity.newIntent(this, it))
+            startActivity(CurrencyActivity.newIntent(this, it.code))
         }
     }
 

@@ -1,5 +1,6 @@
 package com.kes.app045_kt_currencies.data.database.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -37,4 +38,9 @@ interface RelativePriceDao {
             "AND priceCurrencyCode = :priceCode " +
             "LIMIT 1")
     fun getRelativePrice(baseCode: String, priceCode: String): RelativePriceDBModel?
+
+
+    @Query("SELECT * FROM prices WHERE baseCurrencyCode = :code ORDER BY priceCurrencyCode")
+    fun getPriceListLiveData(code: String): LiveData<List<RelativePriceDBModel>>
+
 }

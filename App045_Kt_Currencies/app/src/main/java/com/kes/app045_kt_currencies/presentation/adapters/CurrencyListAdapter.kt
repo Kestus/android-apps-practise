@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.kes.app045_kt_currencies.R
 import com.kes.app045_kt_currencies.databinding.CurrencyCardBinding
 import com.kes.app045_kt_currencies.domain.model.CurrencyItem
 
@@ -29,6 +30,14 @@ class CurrencyListAdapter :
         binding.currencyCode.text = item.code.uppercase()
         binding.currencyName.text = item.name
 
+        val background = if (item.favourite) {
+            R.drawable.currency_card_background_fav
+        } else {
+            R.drawable.currency_card_background
+        }
+
+        binding.layout.setBackgroundResource(background)
+
         binding.root.apply {
             setOnClickListener { onItemClickListener?.invoke(item) }
         }
@@ -36,7 +45,7 @@ class CurrencyListAdapter :
 
     class ViewHolder(val binding: CurrencyCardBinding) : RecyclerView.ViewHolder(binding.root)
 
-    class DiffCallback() : DiffUtil.ItemCallback<CurrencyItem>() {
+    class DiffCallback : DiffUtil.ItemCallback<CurrencyItem>() {
         override fun areItemsTheSame(oldItem: CurrencyItem, newItem: CurrencyItem): Boolean {
             return oldItem.id == newItem.id
         }

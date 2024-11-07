@@ -7,19 +7,10 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.kes.app045_kt_currencies.data.RepositoryImpl
 import com.kes.app045_kt_currencies.data.ServiceRepositoryImpl
 import com.kes.app045_kt_currencies.data.mapper.CurrencyMapper
 import com.kes.app045_kt_currencies.data.network.ApiFactory
-import com.kes.app045_kt_currencies.data.network.model.CurrenciesResult
-import com.kes.app045_kt_currencies.domain.Repository
 import com.kes.app045_kt_currencies.domain.ServiceRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class CurrencyUpdateWorker(
     context: Context,
@@ -37,10 +28,11 @@ class CurrencyUpdateWorker(
         val data = response.body()!!
 
         // filter and save data to db
-        data.filter { it.key.length == 3 }    // filter-out non three-letter codes
+        data.asSequence().filter { it.key.length == 3 }    // filter-out non three-letter codes
             .filter { it.value.isNotEmpty() } // filter-out empty names
             .filter { !it.value.contains("(coin)".toRegex(RegexOption.IGNORE_CASE)) } // filter-out "coins"
-            .map { CurrencyMapper.mapEntryToDBModel(it) }
+            .filter { !it.value.contains("(token)".toRegex(RegexOption.IGNORE_CASE)) } // filter-out "tokens"
+            .map { CurrencyMapper.mapEntryToDBModel(it) }.toList()
             .apply {
                 repository.insertCurrency(this@apply)
             }

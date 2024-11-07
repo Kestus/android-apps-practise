@@ -2,5 +2,16 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+
+    <color name="primary">#FF8A80</color>
+    <color name="secondary">#b9f6ca</color>
+    <color name="secondary_dark">#A5D6A7</color>
+    <color name="tertiary">#FFD740</color>
+    <color name="tertiary_dark">#FFAB40</color>
     <color name="accent">#F50057</color>
+
+    <color name="text_color_primary">#102B5D</color>
+    <color name="text_color_secondary">#0A2048</color>
+
 </resources>
