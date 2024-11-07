@@ -8,6 +8,8 @@ interface Repository {
 
     fun getAll(): LiveData<List<CurrencyItem>>
 
+    fun getAllFavCodes(): List<String>
+
     fun updateCurrency(currency: CurrencyItem)
 
     fun getCurrencyByCode(code: String): LiveData<CurrencyItem>

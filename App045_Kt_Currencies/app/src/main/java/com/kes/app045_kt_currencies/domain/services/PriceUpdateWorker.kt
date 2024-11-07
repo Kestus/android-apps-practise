@@ -21,37 +21,39 @@ import com.kes.app045_kt_currencies.domain.ServiceRepository
 import java.util.concurrent.TimeUnit
 
 class PriceUpdateWorker(
-    private val context: Context,
+    context: Context,
     private val workerParameters: WorkerParameters
 ) : Worker(context, workerParameters) {
 
     override fun doWork(): Result {
-        val currencyCodesList = deserialize(workerParameters.inputData.getString(LIST))
+        val data = workerParameters.inputData.getString(LIST)
+
+        // if no data (list of codes) provided, load all favourite currency codes
+        val currencyCodesList = if (data != null) {
+            deserialize(data)
+        } else {
+            repository.getAllCodes()
+        }
 
         for (code in currencyCodesList) {
             val response = apiService.getCurrency(code).execute()
-
             if (!response.isSuccessful || response.body() == null) {
                 Log.e("ERROR_API", response.message())
                 return Result.failure()
             }
-
             val priceListResponse = response.body()!!
 
             // Filter prices to save only those already in db
             val availableCurrencyCodes = repository.getAllCodes()
             priceListResponse.filterPriceMap(availableCurrencyCodes)
-
             // Select base currency from db
             val dbData =
                 repository.getCurrencyWithPricesByCode(priceListResponse.baseCurrencyCode!!)
             // map response to db model
             val prices = PriceMapper.responseToDBModelList(priceListResponse)
-
             // update prices
             val updatedAt = priceListResponse.date!!
             dbData.submitPrices(prices, updatedAt)
-
             // Save to db
             repository.updateCurrencyWithPrices(dbData)
         }
@@ -77,13 +79,11 @@ class PriceUpdateWorker(
          */
         fun makePeriodicRequest(
             application: Application,
-            codeList: List<String> = listOf(),
             interval: Long = 1,
-            timeUnit: TimeUnit = TimeUnit.HOURS
+            timeUnit: TimeUnit = TimeUnit.DAYS
         ): PeriodicWorkRequest {
             _repository = ServiceRepositoryImpl(application)
             return PeriodicWorkRequestBuilder<PriceUpdateWorker>(interval, timeUnit)
-                .setInputData(workDataOf(LIST to codeList))
                 .setConstraints(makeConstraints())
                 .build()
         }

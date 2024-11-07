@@ -25,6 +25,10 @@ class RepositoryImpl(application: Application) : Repository {
         return currencyDao.getAllLiveData().map { CurrencyMapper.mapDBModelToItemList(it) }
     }
 
+    override fun getAllFavCodes(): List<String> {
+        return currencyDao.getAllFavCodes()
+    }
+
     override fun updateCurrency(currency: CurrencyItem) {
         scope.launch {
             currencyDao.updateCurrency(CurrencyMapper.mapItemToDBModel(currency))

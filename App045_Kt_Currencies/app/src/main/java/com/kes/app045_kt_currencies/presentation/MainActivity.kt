@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity() {
         setupAdapter()
         binding.recyclerView.adapter = adapter
         viewModel.startUpdateCurrencyWork()
+        viewModel.startPeriodicFavCurrencyUpdatesWork()
 
         observeCurrencyList()
         setupSearchInputListener()
@@ -75,7 +76,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(CurrencyActivity.newIntent(this, it.code))
         }
     }
-
 
     private fun setupSearchInputListener() {
         binding.etSearch.addTextChangedListener(object : TextWatcher {

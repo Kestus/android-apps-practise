@@ -49,5 +49,6 @@ interface CurrencyDao {
     @Query("SELECT * FROM currencies WHERE code = :currencyCode LIMIT 1")
     fun getCurrencyWithPrices(currencyCode: String): CurrencyWithPrices
 
-
+    @Query("SELECT code FROM currencies WHERE favourite = 1 ORDER BY code")
+    fun getAllFavCodes(): List<String>
 }
