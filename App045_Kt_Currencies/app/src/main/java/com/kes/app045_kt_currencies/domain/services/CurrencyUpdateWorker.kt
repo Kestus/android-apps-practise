@@ -1,16 +1,15 @@
 package com.kes.app045_kt_currencies.domain.services
 
-import android.app.Application
 import android.content.Context
 import android.util.Log
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.kes.app045_kt_currencies.data.ServiceRepositoryImpl
 import com.kes.app045_kt_currencies.data.mapper.CurrencyMapper
 import com.kes.app045_kt_currencies.data.network.ApiFactory
-import com.kes.app045_kt_currencies.domain.ServiceRepository
+import com.kes.app045_kt_currencies.domain.Repository
+import kotlinx.coroutines.runBlocking
 
 class CurrencyUpdateWorker(
     context: Context,
@@ -18,7 +17,7 @@ class CurrencyUpdateWorker(
 ) : Worker(context, workerParameters) {
 
     override fun doWork(): Result {
-        val response = apiService.getLatest().execute()
+        val response = runBlocking { apiService.getLatest().execute() }
 
         if (!response.isSuccessful || response.body() == null) {
             Log.e("ERROR_API", response.message())
@@ -43,17 +42,14 @@ class CurrencyUpdateWorker(
     companion object {
         const val WORK_NAME = "currency updates work"
 
-        private var _repository: ServiceRepository? = null
-        private val repository by lazy {
-            _repository!!
-        }
+        private lateinit var repository: Repository
 
         private val apiService by lazy {
             ApiFactory.getService()
         }
 
-        fun makeRequest(application: Application): OneTimeWorkRequest {
-            _repository = ServiceRepositoryImpl(application)
+        fun makeRequest(repository: Repository): OneTimeWorkRequest {
+            this.repository = repository
             return OneTimeWorkRequestBuilder<CurrencyUpdateWorker>()
                 .build()
         }

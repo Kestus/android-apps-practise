@@ -38,8 +38,6 @@ class MainActivity : AppCompatActivity() {
 
         setupAdapter()
         binding.recyclerView.adapter = adapter
-        viewModel.startUpdateCurrencyWork()
-        viewModel.startPeriodicFavCurrencyUpdatesWork()
 
         observeCurrencyList()
         setupSearchInputListener()

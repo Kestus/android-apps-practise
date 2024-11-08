@@ -1,6 +1,5 @@
 package com.kes.app045_kt_currencies.domain.services
 
-import android.app.Application
 import android.content.Context
 import android.util.Log
 import androidx.work.Constraints
@@ -12,12 +11,11 @@ import androidx.work.PeriodicWorkRequest
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import androidx.work.workDataOf
 import com.google.gson.Gson
-import com.kes.app045_kt_currencies.data.ServiceRepositoryImpl
 import com.kes.app045_kt_currencies.data.mapper.PriceMapper
 import com.kes.app045_kt_currencies.data.network.ApiFactory
-import com.kes.app045_kt_currencies.domain.ServiceRepository
+import com.kes.app045_kt_currencies.domain.Repository
+import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 
 class PriceUpdateWorker(
@@ -36,7 +34,7 @@ class PriceUpdateWorker(
         }
 
         for (code in currencyCodesList) {
-            val response = apiService.getCurrency(code).execute()
+            val response = runBlocking { apiService.getCurrency(code).execute() }
             if (!response.isSuccessful || response.body() == null) {
                 Log.e("ERROR_API", response.message())
                 return Result.failure()
@@ -67,8 +65,7 @@ class PriceUpdateWorker(
         private const val LIST = "list"
         private val gson = Gson()
 
-        private var _repository: ServiceRepository? = null
-        private val repository by lazy { _repository!! }
+        private lateinit var repository: Repository
 
         private val apiService by lazy {
             ApiFactory.getService()
@@ -78,21 +75,21 @@ class PriceUpdateWorker(
          * @param interval: Minimal period for periodic work is 15 minutes.
          */
         fun makePeriodicRequest(
-            application: Application,
+            repository: Repository,
             interval: Long = 1,
             timeUnit: TimeUnit = TimeUnit.DAYS
         ): PeriodicWorkRequest {
-            _repository = ServiceRepositoryImpl(application)
+            this.repository = repository
             return PeriodicWorkRequestBuilder<PriceUpdateWorker>(interval, timeUnit)
                 .setConstraints(makeConstraints())
                 .build()
         }
 
         fun makeRequest(
-            application: Application,
+            repository: Repository,
             codeList: List<String>
         ): OneTimeWorkRequest {
-            _repository = ServiceRepositoryImpl(application)
+            this.repository = repository
             val data = serialize(codeList)
             return OneTimeWorkRequestBuilder<PriceUpdateWorker>()
                 .setInputData(data)
@@ -101,10 +98,10 @@ class PriceUpdateWorker(
         }
 
         fun makeRequest(
-            application: Application,
+            repository: Repository,
             code: String
         ): OneTimeWorkRequest {
-            return makeRequest(application, listOf(code))
+            return makeRequest(repository, listOf(code))
         }
 
         private fun makeConstraints(): Constraints {

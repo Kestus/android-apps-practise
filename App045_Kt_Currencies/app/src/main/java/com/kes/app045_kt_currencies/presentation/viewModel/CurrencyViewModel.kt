@@ -3,20 +3,17 @@ package com.kes.app045_kt_currencies.presentation.viewModel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
-import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
-import com.kes.app045_kt_currencies.data.RepositoryImpl
-import com.kes.app045_kt_currencies.domain.services.PriceUpdateWorker
+import com.kes.app045_kt_currencies.data.repository.RepositoryImpl
 import com.kes.app045_kt_currencies.domain.useCases.GetCurrencyUseCase
 import com.kes.app045_kt_currencies.domain.useCases.GetPriceListUseCase
 import com.kes.app045_kt_currencies.domain.useCases.UpdateCurrencyUseCase
 
 class CurrencyViewModel(
-    private val application: Application, private val code: String
+    application: Application, private val code: String
 ) : AndroidViewModel(application) {
 
     private val repository = RepositoryImpl(application)
-    private val workManager = WorkManager.getInstance(application)
 
     val updateCurrency = UpdateCurrencyUseCase(repository)
     val getPriceList = GetPriceListUseCase(repository)
@@ -26,7 +23,7 @@ class CurrencyViewModel(
     val priceList = getPriceList(code)
 
     init {
-        launchPriceUpdateWork()
+        repository.loadPriceListForCurrency(code)
     }
 
     val isFavourite = MediatorLiveData<Boolean>().apply {
@@ -34,15 +31,6 @@ class CurrencyViewModel(
             this.value = it.favourite
         }
     }
-
-    private fun launchPriceUpdateWork() {
-        workManager.enqueueUniqueWork(
-            PriceUpdateWorker.WORK_NAME,
-            ExistingWorkPolicy.KEEP,
-            PriceUpdateWorker.makeRequest(application, code)
-        )
-    }
-
 
     fun toggleFavourite() {
         currentItem.value?.let {

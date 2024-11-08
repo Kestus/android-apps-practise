@@ -7,12 +7,10 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
-import com.kes.app045_kt_currencies.data.RepositoryImpl
+import com.kes.app045_kt_currencies.data.repository.RepositoryImpl
 import com.kes.app045_kt_currencies.data.database.AppDatabase
 import com.kes.app045_kt_currencies.domain.model.CurrencyItem
-import com.kes.app045_kt_currencies.domain.services.CurrencyUpdateWorker
 import com.kes.app045_kt_currencies.domain.services.PriceUpdateWorker
 import com.kes.app045_kt_currencies.domain.useCases.GetCurrencyListUseCase
 import kotlinx.coroutines.launch
@@ -27,6 +25,11 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
     private val _currencyList: LiveData<List<CurrencyItem>> = getCurrencyList()
 
     private var _searchInput = MutableLiveData<String?>(null)
+
+    init {
+        repository.loadCurrencies()
+        startPeriodicFavCurrencyUpdatesWork()
+    }
 
 
     val loading = MediatorLiveData<Boolean>().apply {
@@ -44,19 +47,11 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
         }
     }
 
-    fun startUpdateCurrencyWork() {
-        workManager.enqueueUniqueWork(
-            CurrencyUpdateWorker.WORK_NAME,
-            ExistingWorkPolicy.KEEP,
-            CurrencyUpdateWorker.makeRequest(application)
-        )
-    }
-
-    fun startPeriodicFavCurrencyUpdatesWork() {
+    private fun startPeriodicFavCurrencyUpdatesWork() {
         workManager.enqueueUniquePeriodicWork(
             PriceUpdateWorker.WORK_NAME_PERIODIC,
             ExistingPeriodicWorkPolicy.UPDATE,
-            PriceUpdateWorker.makePeriodicRequest(application)
+            PriceUpdateWorker.makePeriodicRequest(repository)
         )
     }
 

@@ -5,18 +5,18 @@ import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import java.lang.reflect.Type
 
-data class PriceListResponse(
+data class PriceListDto(
     var baseCurrencyCode: String? = null,
     var date: String? = null,
     var priceMap: Map<String, Double>? = null
-) : JsonDeserializer<PriceListResponse> {
+) : JsonDeserializer<PriceListDto> {
 
     override fun deserialize(
         json: JsonElement?,
         typeOfT: Type?,
         context: JsonDeserializationContext?
-    ): PriceListResponse {
-        val result = PriceListResponse()
+    ): PriceListDto {
+        val result = PriceListDto()
 
         json?.let {
             val obj = json.asJsonObject
