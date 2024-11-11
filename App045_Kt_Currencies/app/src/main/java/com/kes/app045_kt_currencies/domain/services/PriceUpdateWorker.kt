@@ -1,7 +1,6 @@
 package com.kes.app045_kt_currencies.domain.services
 
 import android.content.Context
-import android.util.Log
 import androidx.work.Constraints
 import androidx.work.Data
 import androidx.work.NetworkType
@@ -34,12 +33,13 @@ class PriceUpdateWorker(
         }
 
         for (code in currencyCodesList) {
-            val response = runBlocking { apiService.getCurrency(code).execute() }
-            if (!response.isSuccessful || response.body() == null) {
-                Log.e("ERROR_API", response.message())
-                return Result.failure()
-            }
-            val priceListResponse = response.body()!!
+//            val response = runBlocking { apiService.getCurrency(code).execute() }
+//            if (!response.isSuccessful || response.body() == null) {
+//                Log.e("ERROR_API", response.message())
+//                return Result.failure()
+//            }
+
+            val priceListResponse = runBlocking { apiService.getCurrency(code) }
 
             // Filter prices to save only those already in db
             val availableCurrencyCodes = repository.getAllCodes()

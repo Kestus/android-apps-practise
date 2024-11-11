@@ -15,16 +15,16 @@ import com.kes.app045_kt_currencies.data.database.entity.RelativePriceDBModel
 interface RelativePriceDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertRelativePrice(price: RelativePriceDBModel)
+    suspend fun insertRelativePrice(price: RelativePriceDBModel)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertRelativePriceList(priceList: List<RelativePriceDBModel>)
+    suspend fun insertRelativePriceList(priceList: List<RelativePriceDBModel>)
 
     @Update
-    fun updateCurrency(currency: CurrencyDBModel)
+    suspend fun updateCurrency(currency: CurrencyDBModel)
 
     @Transaction
-    fun updateCurrencyWithPrices(data: CurrencyWithPrices) {
+    suspend fun updateCurrencyWithPrices(data: CurrencyWithPrices) {
         updateCurrency(data.currency)
         insertRelativePriceList(data.prices)
     }

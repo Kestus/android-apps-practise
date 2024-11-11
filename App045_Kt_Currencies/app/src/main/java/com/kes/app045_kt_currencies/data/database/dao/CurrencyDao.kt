@@ -20,10 +20,10 @@ interface CurrencyDao {
     suspend fun insertCurrencyList(list: List<CurrencyDBModel>)
 
     @Update
-    fun updateCurrency(currency: CurrencyDBModel)
+    suspend fun updateCurrency(currency: CurrencyDBModel)
 
     @Delete
-    fun deleteCurrency(currency: CurrencyDBModel)
+    suspend fun deleteCurrency(currency: CurrencyDBModel)
 
     @Query("SELECT * FROM currencies ORDER BY code")
     fun getAll(): List<CurrencyDBModel>

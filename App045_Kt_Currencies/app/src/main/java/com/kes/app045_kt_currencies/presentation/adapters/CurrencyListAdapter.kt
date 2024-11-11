@@ -10,7 +10,7 @@ import com.kes.app045_kt_currencies.databinding.CurrencyCardBinding
 import com.kes.app045_kt_currencies.domain.model.CurrencyItem
 
 class CurrencyListAdapter :
-    ListAdapter<CurrencyItem, CurrencyListAdapter.ViewHolder>(DiffCallback()) {
+    ListAdapter<CurrencyItem, CurrencyListAdapter.ViewHolder>(DiffCallback) {
 
     var onItemClickListener: ((CurrencyItem) -> Unit)? = null
 
@@ -45,7 +45,7 @@ class CurrencyListAdapter :
 
     class ViewHolder(val binding: CurrencyCardBinding) : RecyclerView.ViewHolder(binding.root)
 
-    class DiffCallback : DiffUtil.ItemCallback<CurrencyItem>() {
+    object DiffCallback : DiffUtil.ItemCallback<CurrencyItem>() {
         override fun areItemsTheSame(oldItem: CurrencyItem, newItem: CurrencyItem): Boolean {
             return oldItem.id == newItem.id
         }

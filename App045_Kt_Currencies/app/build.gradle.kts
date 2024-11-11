@@ -4,6 +4,9 @@ plugins {
 
     id("com.google.devtools.ksp")
     id("kotlin-parcelize")
+
+    // Navigation Directions
+    id("androidx.navigation.safeargs")
 }
 
 android {
@@ -81,5 +84,12 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata:$lifecycleVersion")
     // Annotation processor
     ksp("androidx.lifecycle:lifecycle-compiler:$lifecycleVersion")
+
+    // Navigation
+    val navVersion = "2.8.3"
+    // Views/Fragments integration
+    implementation("androidx.navigation:navigation-fragment:$navVersion")
+    implementation("androidx.navigation:navigation-ui:$navVersion")
+
 
 }

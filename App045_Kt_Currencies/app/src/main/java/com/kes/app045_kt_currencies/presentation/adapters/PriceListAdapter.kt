@@ -10,7 +10,7 @@ import com.kes.app045_kt_currencies.domain.model.RelativePriceItem
 import java.util.Locale
 
 class PriceListAdapter :
-    ListAdapter<RelativePriceItem, PriceListAdapter.ViewHolder>(DiffCallback()) {
+    ListAdapter<RelativePriceItem, PriceListAdapter.ViewHolder>(DiffCallback) {
 
     var onItemClickListener: ((RelativePriceItem) -> Unit)? = null
 
@@ -37,7 +37,7 @@ class PriceListAdapter :
 
     class ViewHolder(val binding: PriceCardBinding) : RecyclerView.ViewHolder(binding.root)
 
-    class DiffCallback() : DiffUtil.ItemCallback<RelativePriceItem>() {
+    object DiffCallback : DiffUtil.ItemCallback<RelativePriceItem>() {
         override fun areItemsTheSame(
             oldItem: RelativePriceItem,
             newItem: RelativePriceItem

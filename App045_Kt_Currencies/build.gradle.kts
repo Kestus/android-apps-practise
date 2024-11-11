@@ -5,3 +5,13 @@ plugins {
 
     id("com.google.devtools.ksp") version "2.0.10-1.0.24" apply false
 }
+
+buildscript {
+    repositories {
+        google()
+    }
+    dependencies {
+        val navVersion = "2.8.3"
+        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:$navVersion")
+    }
+}
