@@ -12,7 +12,7 @@ import com.kes.app045_kt_currencies.R
 import com.kes.app045_kt_currencies.databinding.FragmentPriceListBinding
 import com.kes.app045_kt_currencies.presentation.adapters.PriceListAdapter
 import com.kes.app045_kt_currencies.presentation.viewModel.AppViewModelFactory
-import com.kes.app045_kt_currencies.presentation.viewModel.CurrencyViewModel
+import com.kes.app045_kt_currencies.presentation.viewModel.PriceListViewModel
 
 class PriceListFragment : Fragment() {
 
@@ -20,7 +20,7 @@ class PriceListFragment : Fragment() {
     private val binding
         get() = _binding ?: throw RuntimeException("_binding == null")
 
-    private lateinit var viewModel: CurrencyViewModel
+    private lateinit var viewModel: PriceListViewModel
     private val adapter by lazy { PriceListAdapter() }
     private val args by navArgs<PriceListFragmentArgs>()
 
@@ -42,7 +42,7 @@ class PriceListFragment : Fragment() {
         viewModel = AppViewModelFactory(
             requireActivity().application,
             args.currencyCode
-        ).create(CurrencyViewModel::class.java)
+        ).create(PriceListViewModel::class.java)
         binding.recyclerView.adapter = adapter
         bindCurrencyItem()
         observePriceList()

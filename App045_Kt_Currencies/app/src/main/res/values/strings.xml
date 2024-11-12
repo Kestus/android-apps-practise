@@ -3,4 +3,5 @@
     <string name="search">Search</string>
     <string name="btn_options_description">button show more options</string>
     <string name="btn_fav_desc">Favourite currency button</string>
+    <string name="btn_clear_search_desc">clear search text</string>
 </resources>

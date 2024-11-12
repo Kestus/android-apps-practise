@@ -1,29 +1,22 @@
-package com.kes.app045_kt_currencies.domain.services
+package com.kes.app045_kt_currencies.domain.workers
 
 import android.content.Context
+import androidx.work.CoroutineWorker
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.kes.app045_kt_currencies.data.mapper.CurrencyMapper
 import com.kes.app045_kt_currencies.data.network.ApiFactory
 import com.kes.app045_kt_currencies.domain.Repository
-import kotlinx.coroutines.runBlocking
 
 class CurrencyUpdateWorker(
     context: Context,
     workerParameters: WorkerParameters
-) : Worker(context, workerParameters) {
+) : CoroutineWorker(context, workerParameters) {
 
-    override fun doWork(): Result {
-//        val response = runBlocking { apiService.getLatest() }
-//
-//        if (!response.isSuccessful || response.body() == null) {
-//            Log.e("ERROR_API", response.message())
-//            return Result.failure()
-//        }
+    override suspend fun doWork(): Result {
 
-        val data = runBlocking { apiService.getLatest() }
+        val data = apiService.getLatest()
 
         // filter and save data to db
         data.asSequence().filter { it.key.length == 3 }    // filter-out non three-letter codes

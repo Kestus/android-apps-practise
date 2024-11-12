@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kes.app045_kt_currencies.databinding.FragmentCurrencyListBinding
 import com.kes.app045_kt_currencies.presentation.adapters.CurrencyListAdapter
 import com.kes.app045_kt_currencies.presentation.viewModel.AppViewModelFactory
-import com.kes.app045_kt_currencies.presentation.viewModel.MainViewModel
+import com.kes.app045_kt_currencies.presentation.viewModel.CurrencyListViewModel
 
 class CurrencyListFragment : Fragment() {
 
@@ -20,7 +20,7 @@ class CurrencyListFragment : Fragment() {
     private val binding
         get() = _binding ?: throw RuntimeException("_binding == null")
 
-    private lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: CurrencyListViewModel
     private lateinit var adapter: CurrencyListAdapter
 
     override fun onCreateView(
@@ -42,12 +42,12 @@ class CurrencyListFragment : Fragment() {
 
         viewModel = AppViewModelFactory(
             requireActivity().application
-        ).create(MainViewModel::class.java)
+        ).create(CurrencyListViewModel::class.java)
         setupAdapter()
         binding.recyclerView.adapter = adapter
         observeCurrencyList()
         setupItemOnClickListener()
-        setupSearchInputListener()
+        setupSearchInput()
     }
 
     override fun onDestroyView() {
@@ -85,6 +85,28 @@ class CurrencyListFragment : Fragment() {
            findNavController().navigate(
                CurrencyListFragmentDirections.actionCurrencyListFragmentToPriceListFragment(it.code)
            )
+        }
+    }
+
+    private fun setupSearchInput() {
+        setupSearchInputListener()
+        setupClearSearchButton()
+    }
+
+    private fun setupClearSearchButton() {
+        binding.apply {
+            btnClearSearch.setOnClickListener {
+                etSearch.text?.clear()
+                etSearch.clearFocus()
+                viewModel.clearSearchInput()
+            }
+            viewModel.searchInput.observe(viewLifecycleOwner) {
+                btnClearSearch.visibility = if (it == null) {
+                    View.GONE
+                } else {
+                    View.VISIBLE
+                }
+            }
         }
     }
 

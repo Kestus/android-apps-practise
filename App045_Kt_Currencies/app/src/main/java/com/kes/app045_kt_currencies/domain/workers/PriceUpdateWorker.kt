@@ -1,28 +1,27 @@
-package com.kes.app045_kt_currencies.domain.services
+package com.kes.app045_kt_currencies.domain.workers
 
 import android.content.Context
 import androidx.work.Constraints
+import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequest
 import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.google.gson.Gson
 import com.kes.app045_kt_currencies.data.mapper.PriceMapper
 import com.kes.app045_kt_currencies.data.network.ApiFactory
 import com.kes.app045_kt_currencies.domain.Repository
-import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 
 class PriceUpdateWorker(
     context: Context,
     private val workerParameters: WorkerParameters
-) : Worker(context, workerParameters) {
+) : CoroutineWorker(context, workerParameters) {
 
-    override fun doWork(): Result {
+    override suspend fun doWork(): Result {
         val data = workerParameters.inputData.getString(LIST)
 
         // if no data (list of codes) provided, load all favourite currency codes
@@ -33,13 +32,8 @@ class PriceUpdateWorker(
         }
 
         for (code in currencyCodesList) {
-//            val response = runBlocking { apiService.getCurrency(code).execute() }
-//            if (!response.isSuccessful || response.body() == null) {
-//                Log.e("ERROR_API", response.message())
-//                return Result.failure()
-//            }
 
-            val priceListResponse = runBlocking { apiService.getCurrency(code) }
+            val priceListResponse = apiService.getCurrency(code)
 
             // Filter prices to save only those already in db
             val availableCurrencyCodes = repository.getAllCodes()

@@ -10,12 +10,11 @@ import com.kes.app045_kt_currencies.data.database.entity.CurrencyDBModel
 import com.kes.app045_kt_currencies.data.database.entity.CurrencyWithPrices
 import com.kes.app045_kt_currencies.data.mapper.CurrencyMapper
 import com.kes.app045_kt_currencies.data.mapper.PriceMapper
-import com.kes.app045_kt_currencies.data.network.ApiFactory
 import com.kes.app045_kt_currencies.domain.Repository
 import com.kes.app045_kt_currencies.domain.model.CurrencyItem
 import com.kes.app045_kt_currencies.domain.model.RelativePriceItem
-import com.kes.app045_kt_currencies.domain.services.CurrencyUpdateWorker
-import com.kes.app045_kt_currencies.domain.services.PriceUpdateWorker
+import com.kes.app045_kt_currencies.domain.workers.CurrencyUpdateWorker
+import com.kes.app045_kt_currencies.domain.workers.PriceUpdateWorker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,7 +25,6 @@ class RepositoryImpl(application: Application) : Repository {
     private val currencyDao = database.currencyDao
     private val pricesDao = database.pricesDao
 
-    private val apiService = ApiFactory.getService()
     private val workManager = WorkManager.getInstance(application)
 
     private val scope = CoroutineScope(Dispatchers.IO)

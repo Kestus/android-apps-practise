@@ -3,14 +3,13 @@ package com.kes.app045_kt_currencies.presentation.viewModel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
-import androidx.work.WorkManager
 import com.kes.app045_kt_currencies.data.repository.RepositoryImpl
 import com.kes.app045_kt_currencies.domain.useCases.GetCurrencyUseCase
 import com.kes.app045_kt_currencies.domain.useCases.GetPriceListUseCase
 import com.kes.app045_kt_currencies.domain.useCases.UpdateCurrencyUseCase
 
-class CurrencyViewModel(
-    application: Application, private val code: String
+class PriceListViewModel(
+    application: Application, code: String
 ) : AndroidViewModel(application) {
 
     private val repository = RepositoryImpl(application)

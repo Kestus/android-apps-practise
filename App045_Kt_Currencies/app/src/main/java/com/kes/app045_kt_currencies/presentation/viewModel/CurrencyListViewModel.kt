@@ -5,17 +5,14 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.WorkManager
 import com.kes.app045_kt_currencies.data.repository.RepositoryImpl
-import com.kes.app045_kt_currencies.data.database.AppDatabase
 import com.kes.app045_kt_currencies.domain.model.CurrencyItem
-import com.kes.app045_kt_currencies.domain.services.PriceUpdateWorker
 import com.kes.app045_kt_currencies.domain.useCases.GetCurrencyListUseCase
-import kotlinx.coroutines.launch
+import com.kes.app045_kt_currencies.domain.workers.PriceUpdateWorker
 
-class MainViewModel(private val application: Application) : AndroidViewModel(application) {
+class CurrencyListViewModel(private val application: Application) : AndroidViewModel(application) {
 
     private val repository = RepositoryImpl(application)
     private val workManager by lazy { WorkManager.getInstance(application) }
@@ -25,6 +22,7 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
     private val _currencyList: LiveData<List<CurrencyItem>> = getCurrencyList()
 
     private var _searchInput = MutableLiveData<String?>(null)
+    val searchInput: LiveData<String?> get() = _searchInput
 
     init {
         repository.loadCurrencies()
@@ -55,9 +53,8 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
         )
     }
 
-    fun deleteAll() = viewModelScope.launch {
-        val dao = AppDatabase.getInstance(application).testingDao
-        dao.deleteAll()
+    fun clearSearchInput() {
+        _searchInput.value = null
     }
 
     fun setSearchInput(s: CharSequence?) {

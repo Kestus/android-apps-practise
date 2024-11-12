@@ -9,8 +9,8 @@ class AppViewModelFactory(private val application: Application, private val code
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when (modelClass) {
-            MainViewModel::class.java -> MainViewModel(application) as T
-            CurrencyViewModel::class.java -> CurrencyViewModel(application, code!!) as T
+            CurrencyListViewModel::class.java -> CurrencyListViewModel(application) as T
+            PriceListViewModel::class.java -> PriceListViewModel(application, code!!) as T
 
             else -> throw IllegalArgumentException("Unknown ViewModel Class")
         }
