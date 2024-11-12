@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.kes.app045_kt_currencies.R
 import com.kes.app045_kt_currencies.databinding.FragmentPriceListBinding
@@ -13,8 +15,6 @@ import com.kes.app045_kt_currencies.presentation.viewModel.AppViewModelFactory
 import com.kes.app045_kt_currencies.presentation.viewModel.CurrencyViewModel
 
 class PriceListFragment : Fragment() {
-
-    private lateinit var currentCurrencyCode: String
 
     private var _binding: FragmentPriceListBinding? = null
     private val binding
@@ -88,7 +88,10 @@ class PriceListFragment : Fragment() {
 
     private fun setupOnItemClickListener() {
         adapter.onItemClickListener = {
-            PriceListFragmentDirections.actionPriceListFragmentSelf(it.currencyCode)
+            findNavController().navigate(
+                PriceListFragmentDirections.actionPriceListFragmentSelf(it.currencyCode),
+                NavOptions.Builder().setLaunchSingleTop(true).build()
+            )
         }
     }
 

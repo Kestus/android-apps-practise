@@ -35,6 +35,8 @@ class PriceListAdapter :
         }
     }
 
+
+
     class ViewHolder(val binding: PriceCardBinding) : RecyclerView.ViewHolder(binding.root)
 
     object DiffCallback : DiffUtil.ItemCallback<RelativePriceItem>() {
