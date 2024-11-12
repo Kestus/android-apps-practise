@@ -56,40 +56,35 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     // Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+    implementation(libs.kotlinx.coroutines.android)
 
     // Retrofit2
-    val retrofitVersion = "2.11.0"
-    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
+    implementation(libs.retrofit)
     // Gson
-    implementation("com.google.code.gson:gson:$retrofitVersion")
+    implementation(libs.gson)
     // Gson converter
-    implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
+    implementation(libs.converter.gson)
 
     // Room
-    val roomVersion = "2.6.1"
-    implementation("androidx.room:room-runtime:$roomVersion")
-    ksp("androidx.room:room-compiler:$roomVersion")
-    implementation("androidx.room:room-ktx:$roomVersion")
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
 
     // Work Manager
-    val workVersion = "2.9.1"
-    implementation("androidx.work:work-runtime-ktx:$workVersion")
+    implementation(libs.androidx.work.runtime.ktx)
 
     // LifeCycle
-    val lifecycleVersion = "2.8.6"
     // ViewModel
-    implementation("androidx.lifecycle:lifecycle-viewmodel:$lifecycleVersion")
+    implementation(libs.androidx.lifecycle.viewmodel)
     // LiveData
-    implementation("androidx.lifecycle:lifecycle-livedata:$lifecycleVersion")
+    implementation(libs.androidx.lifecycle.livedata)
     // Annotation processor
-    ksp("androidx.lifecycle:lifecycle-compiler:$lifecycleVersion")
+    ksp(libs.androidx.lifecycle.compiler)
 
     // Navigation
-    val navVersion = "2.8.3"
     // Views/Fragments integration
-    implementation("androidx.navigation:navigation-fragment:$navVersion")
-    implementation("androidx.navigation:navigation-ui:$navVersion")
+    implementation(libs.androidx.navigation.fragment)
+    implementation(libs.androidx.navigation.ui)
 
 
 }
