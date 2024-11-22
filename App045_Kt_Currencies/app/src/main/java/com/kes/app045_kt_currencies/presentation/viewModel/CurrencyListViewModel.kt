@@ -1,19 +1,17 @@
 package com.kes.app045_kt_currencies.presentation.viewModel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.kes.app045_kt_currencies.domain.model.CurrencyItem
 import com.kes.app045_kt_currencies.domain.useCases.GetCurrencyListUseCase
 import javax.inject.Inject
 
 @Suppress("UNUSED_PROPERTY")
 class CurrencyListViewModel @Inject constructor(
-    application: Application,
     private val getCurrencyList: GetCurrencyListUseCase,
-) : AndroidViewModel(application) {
+) : ViewModel() {
 
     private var _currencyList: LiveData<List<CurrencyItem>> = getCurrencyList()
 
