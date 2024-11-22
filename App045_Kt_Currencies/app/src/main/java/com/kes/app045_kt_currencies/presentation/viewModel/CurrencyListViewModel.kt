@@ -5,30 +5,20 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.WorkManager
-import com.kes.app045_kt_currencies.data.repository.RepositoryImpl
 import com.kes.app045_kt_currencies.domain.model.CurrencyItem
 import com.kes.app045_kt_currencies.domain.useCases.GetCurrencyListUseCase
-import com.kes.app045_kt_currencies.domain.workers.PriceUpdateWorker
+import javax.inject.Inject
 
-class CurrencyListViewModel(private val application: Application) : AndroidViewModel(application) {
+@Suppress("UNUSED_PROPERTY")
+class CurrencyListViewModel @Inject constructor(
+    application: Application,
+    private val getCurrencyList: GetCurrencyListUseCase,
+) : AndroidViewModel(application) {
 
-    private val repository = RepositoryImpl(application)
-    private val workManager by lazy { WorkManager.getInstance(application) }
-
-    private val getCurrencyList = GetCurrencyListUseCase(repository)
-
-    private val _currencyList: LiveData<List<CurrencyItem>> = getCurrencyList()
+    private var _currencyList: LiveData<List<CurrencyItem>> = getCurrencyList()
 
     private var _searchInput = MutableLiveData<String?>(null)
     val searchInput: LiveData<String?> get() = _searchInput
-
-    init {
-        repository.loadCurrencies()
-        startPeriodicFavCurrencyUpdatesWork()
-    }
-
 
     val loading = MediatorLiveData<Boolean>().apply {
         addSource(_currencyList) {
@@ -43,14 +33,6 @@ class CurrencyListViewModel(private val application: Application) : AndroidViewM
         addSource(_searchInput) {
             this.value = filterList(it)
         }
-    }
-
-    private fun startPeriodicFavCurrencyUpdatesWork() {
-        workManager.enqueueUniquePeriodicWork(
-            PriceUpdateWorker.WORK_NAME_PERIODIC,
-            ExistingPeriodicWorkPolicy.UPDATE,
-            PriceUpdateWorker.makePeriodicRequest(repository)
-        )
     }
 
     fun clearSearchInput() {

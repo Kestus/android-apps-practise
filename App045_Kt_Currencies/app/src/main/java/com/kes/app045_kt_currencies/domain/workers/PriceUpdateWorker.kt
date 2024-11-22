@@ -11,15 +11,21 @@ import androidx.work.PeriodicWorkRequest
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkerParameters
 import com.google.gson.Gson
+import com.kes.app045_kt_currencies.MainApplication
 import com.kes.app045_kt_currencies.data.mapper.PriceMapper
-import com.kes.app045_kt_currencies.data.network.ApiFactory
-import com.kes.app045_kt_currencies.domain.Repository
 import java.util.concurrent.TimeUnit
 
 class PriceUpdateWorker(
     context: Context,
     private val workerParameters: WorkerParameters
 ) : CoroutineWorker(context, workerParameters) {
+
+    private val component by lazy {
+        (context.applicationContext as MainApplication).component
+    }
+
+    private val repository = component.getRepository()
+    private val apiService = component.getApiService()
 
     override suspend fun doWork(): Result {
         val data = workerParameters.inputData.getString(LIST)
@@ -28,15 +34,14 @@ class PriceUpdateWorker(
         val currencyCodesList = if (data != null) {
             deserialize(data)
         } else {
-            repository.getAllCodes()
+            repository.getAllFavCodes()
         }
 
+        // Filter prices to save only those already in db
+        val availableCurrencyCodes = repository.getAllCodes()
+
         for (code in currencyCodesList) {
-
             val priceListResponse = apiService.getCurrency(code)
-
-            // Filter prices to save only those already in db
-            val availableCurrencyCodes = repository.getAllCodes()
             priceListResponse.filterPriceMap(availableCurrencyCodes)
             // Select base currency from db
             val dbData =
@@ -59,31 +64,21 @@ class PriceUpdateWorker(
         private const val LIST = "list"
         private val gson = Gson()
 
-        private lateinit var repository: Repository
-
-        private val apiService by lazy {
-            ApiFactory.getService()
-        }
-
         /**
          * @param interval: Minimal period for periodic work is 15 minutes.
          */
         fun makePeriodicRequest(
-            repository: Repository,
             interval: Long = 1,
             timeUnit: TimeUnit = TimeUnit.DAYS
         ): PeriodicWorkRequest {
-            this.repository = repository
             return PeriodicWorkRequestBuilder<PriceUpdateWorker>(interval, timeUnit)
                 .setConstraints(makeConstraints())
                 .build()
         }
 
         fun makeRequest(
-            repository: Repository,
             codeList: List<String>
         ): OneTimeWorkRequest {
-            this.repository = repository
             val data = serialize(codeList)
             return OneTimeWorkRequestBuilder<PriceUpdateWorker>()
                 .setInputData(data)
@@ -92,10 +87,9 @@ class PriceUpdateWorker(
         }
 
         fun makeRequest(
-            repository: Repository,
             code: String
         ): OneTimeWorkRequest {
-            return makeRequest(repository, listOf(code))
+            return makeRequest(listOf(code))
         }
 
         private fun makeConstraints(): Constraints {

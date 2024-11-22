@@ -1,27 +1,47 @@
 package com.kes.app045_kt_currencies.presentation.fragments
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.kes.app045_kt_currencies.MainApplication
 import com.kes.app045_kt_currencies.databinding.FragmentCurrencyListBinding
 import com.kes.app045_kt_currencies.presentation.adapters.CurrencyListAdapter
 import com.kes.app045_kt_currencies.presentation.viewModel.AppViewModelFactory
 import com.kes.app045_kt_currencies.presentation.viewModel.CurrencyListViewModel
+import javax.inject.Inject
 
 class CurrencyListFragment : Fragment() {
+
+    private val component by lazy {
+        (requireActivity().application as MainApplication).component
+            .activityComponentFactory()
+            .create()
+    }
+
+    @Inject
+    lateinit var viewModelFactory: AppViewModelFactory
+    private val viewModel: CurrencyListViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[CurrencyListViewModel::class.java]
+    }
+
+    @Inject
+    lateinit var adapter: CurrencyListAdapter
 
     private var _binding: FragmentCurrencyListBinding? = null
     private val binding
         get() = _binding ?: throw RuntimeException("_binding == null")
 
-    private lateinit var viewModel: CurrencyListViewModel
-    private lateinit var adapter: CurrencyListAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        component.inject(this)
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,10 +59,6 @@ class CurrencyListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel = AppViewModelFactory(
-            requireActivity().application
-        ).create(CurrencyListViewModel::class.java)
         setupAdapter()
         binding.recyclerView.adapter = adapter
         observeCurrencyList()
@@ -56,7 +72,6 @@ class CurrencyListFragment : Fragment() {
     }
 
     private fun setupAdapter() {
-        adapter = CurrencyListAdapter()
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
                 if (fromPosition >= toPosition) {
@@ -111,18 +126,8 @@ class CurrencyListFragment : Fragment() {
     }
 
     private fun setupSearchInputListener() {
-        binding.etSearch.addTextChangedListener(object : TextWatcher {
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.setSearchInput(s)
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // TODO("Not yet implemented")
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                // TODO("Not yet implemented")
-            }
-        })
+        binding.etSearch.doOnTextChanged { text, _, _, _ ->
+            viewModel.setSearchInput(text)
+        }
     }
 }

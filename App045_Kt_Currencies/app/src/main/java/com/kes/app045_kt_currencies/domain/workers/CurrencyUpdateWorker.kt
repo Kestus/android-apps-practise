@@ -5,14 +5,19 @@ import androidx.work.CoroutineWorker
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkerParameters
+import com.kes.app045_kt_currencies.MainApplication
 import com.kes.app045_kt_currencies.data.mapper.CurrencyMapper
-import com.kes.app045_kt_currencies.data.network.ApiFactory
-import com.kes.app045_kt_currencies.domain.Repository
 
 class CurrencyUpdateWorker(
     context: Context,
     workerParameters: WorkerParameters
 ) : CoroutineWorker(context, workerParameters) {
+    private val component by lazy {
+        (context.applicationContext as MainApplication).component
+    }
+
+    private val repository = component.getRepository()
+    private val apiService = component.getApiService()
 
     override suspend fun doWork(): Result {
 
@@ -34,14 +39,7 @@ class CurrencyUpdateWorker(
     companion object {
         const val WORK_NAME = "currency updates work"
 
-        private lateinit var repository: Repository
-
-        private val apiService by lazy {
-            ApiFactory.getService()
-        }
-
-        fun makeRequest(repository: Repository): OneTimeWorkRequest {
-            this.repository = repository
+        fun makeRequest(): OneTimeWorkRequest {
             return OneTimeWorkRequestBuilder<CurrencyUpdateWorker>()
                 .build()
         }

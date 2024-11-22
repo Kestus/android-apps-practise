@@ -17,7 +17,7 @@ import com.kes.app045_kt_currencies.data.database.entity.RelativePriceDBModel
     version = 5,
     exportSchema = false
 )
-abstract class AppDatabase: RoomDatabase() {
+abstract class AppDatabase : RoomDatabase() {
 
     abstract val currencyDao: CurrencyDao
     abstract val pricesDao: RelativePriceDao
@@ -47,8 +47,6 @@ abstract class AppDatabase: RoomDatabase() {
             }
         }
     }
-
-
 
 
 }

@@ -5,24 +5,45 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.kes.app045_kt_currencies.MainApplication
 import com.kes.app045_kt_currencies.R
 import com.kes.app045_kt_currencies.databinding.FragmentPriceListBinding
 import com.kes.app045_kt_currencies.presentation.adapters.PriceListAdapter
 import com.kes.app045_kt_currencies.presentation.viewModel.AppViewModelFactory
 import com.kes.app045_kt_currencies.presentation.viewModel.PriceListViewModel
+import javax.inject.Inject
 
 class PriceListFragment : Fragment() {
+    private val component by lazy {
+        (requireActivity().application as MainApplication).component
+            .activityComponentFactory()
+            .create(args.currencyCode)
+    }
+
+    @Inject
+    lateinit var viewModelFactory: AppViewModelFactory
+    private val viewModel: PriceListViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[PriceListViewModel::class.java]
+    }
+
+    @Inject
+    lateinit var adapter: PriceListAdapter
 
     private var _binding: FragmentPriceListBinding? = null
     private val binding
         get() = _binding ?: throw RuntimeException("_binding == null")
 
-    private lateinit var viewModel: PriceListViewModel
-    private val adapter by lazy { PriceListAdapter() }
+
     private val args by navArgs<PriceListFragmentArgs>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        component.inject(this)
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,10 +60,6 @@ class PriceListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = AppViewModelFactory(
-            requireActivity().application,
-            args.currencyCode
-        ).create(PriceListViewModel::class.java)
         binding.recyclerView.adapter = adapter
         bindCurrencyItem()
         observePriceList()
@@ -56,7 +73,7 @@ class PriceListFragment : Fragment() {
     }
 
     private fun bindCurrencyItem() {
-        viewModel.currentItem.observe(viewLifecycleOwner) {
+        viewModel.currencyItem.observe(viewLifecycleOwner) {
             it?.let {
                 binding.currencyName.text = it.name
                 binding.currencyCode.text = it.code.uppercase()
@@ -77,12 +94,14 @@ class PriceListFragment : Fragment() {
     private fun setupFavBtnClickListener() {
         binding.btnFav.setOnClickListener { viewModel.toggleFavourite() }
         viewModel.isFavourite.observe(viewLifecycleOwner) {
-            val src = if (it) {
-                R.drawable.ic_star_active
-            } else {
-                R.drawable.ic_star_border
+            it?.let {
+                val src = if (it) {
+                    R.drawable.ic_star_active
+                } else {
+                    R.drawable.ic_star_border
+                }
+                binding.btnFav.setImageResource(src)
             }
-            binding.btnFav.setImageResource(src)
         }
     }
 
