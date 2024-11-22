@@ -5,7 +5,8 @@ import androidx.lifecycle.map
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
-import com.kes.app045_kt_currencies.data.database.AppDatabase
+import com.kes.app045_kt_currencies.data.database.dao.CurrencyDao
+import com.kes.app045_kt_currencies.data.database.dao.PriceDao
 import com.kes.app045_kt_currencies.data.database.entity.CurrencyDBModel
 import com.kes.app045_kt_currencies.data.database.entity.CurrencyWithPrices
 import com.kes.app045_kt_currencies.data.mapper.CurrencyMapper
@@ -21,13 +22,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class RepositoryImpl @Inject constructor(
-    database: AppDatabase,
+    private val currencyDao: CurrencyDao,
+    private val pricesDao: PriceDao,
     private val workManager: WorkManager,
-    private val mapper: CurrencyMapper
+    private val mapper: CurrencyMapper,
 ) : Repository {
-
-    private val currencyDao = database.currencyDao
-    private val pricesDao = database.pricesDao
 
     private val scope = CoroutineScope(Dispatchers.IO)
 

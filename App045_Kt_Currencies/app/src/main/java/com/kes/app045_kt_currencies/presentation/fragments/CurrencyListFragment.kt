@@ -1,5 +1,6 @@
 package com.kes.app045_kt_currencies.presentation.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -37,10 +38,9 @@ class CurrencyListFragment : Fragment() {
     private val binding
         get() = _binding ?: throw RuntimeException("_binding == null")
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onAttach(context: Context) {
         component.inject(this)
-        super.onCreate(savedInstanceState)
+        super.onAttach(context)
     }
 
     override fun onCreateView(

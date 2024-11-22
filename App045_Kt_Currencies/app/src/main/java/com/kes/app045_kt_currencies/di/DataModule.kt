@@ -3,7 +3,10 @@ package com.kes.app045_kt_currencies.di
 import android.app.Application
 import androidx.work.WorkManager
 import com.kes.app045_kt_currencies.data.database.AppDatabase
+import com.kes.app045_kt_currencies.data.database.dao.CurrencyDao
+import com.kes.app045_kt_currencies.data.database.dao.PriceDao
 import com.kes.app045_kt_currencies.data.mapper.CurrencyMapper
+import com.kes.app045_kt_currencies.data.mapper.PriceMapper
 import com.kes.app045_kt_currencies.data.network.ApiFactory
 import com.kes.app045_kt_currencies.data.network.ApiService
 import dagger.Module
@@ -26,14 +29,32 @@ class DataModule {
 
     @ApplicationScope
     @Provides
-    fun provideMapper(): CurrencyMapper {
+    fun provideCurrencyMapper(): CurrencyMapper {
         return CurrencyMapper
+    }
+
+    @ApplicationScope
+    @Provides
+    fun providePriceMapper(): PriceMapper {
+        return PriceMapper
     }
 
     @ApplicationScope
     @Provides
     fun provideApiService(): ApiService {
         return ApiFactory.getService()
+    }
+
+    @ApplicationScope
+    @Provides
+    fun provideCurrencyDao(database: AppDatabase): CurrencyDao {
+        return database.currencyDao
+    }
+
+    @ApplicationScope
+    @Provides
+    fun providePriceDao(database: AppDatabase): PriceDao {
+        return database.priceDao
     }
 
 }

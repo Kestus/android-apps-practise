@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.Data
+import androidx.work.ListenableWorker
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
@@ -11,21 +12,19 @@ import androidx.work.PeriodicWorkRequest
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkerParameters
 import com.google.gson.Gson
-import com.kes.app045_kt_currencies.MainApplication
 import com.kes.app045_kt_currencies.data.mapper.PriceMapper
+import com.kes.app045_kt_currencies.data.network.ApiService
+import com.kes.app045_kt_currencies.domain.Repository
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class PriceUpdateWorker(
     context: Context,
-    private val workerParameters: WorkerParameters
+    private val workerParameters: WorkerParameters,
+    private val repository: Repository,
+    private val apiService: ApiService,
+    private val mapper: PriceMapper,
 ) : CoroutineWorker(context, workerParameters) {
-
-    private val component by lazy {
-        (context.applicationContext as MainApplication).component
-    }
-
-    private val repository = component.getRepository()
-    private val apiService = component.getApiService()
 
     override suspend fun doWork(): Result {
         val data = workerParameters.inputData.getString(LIST)
@@ -47,7 +46,7 @@ class PriceUpdateWorker(
             val dbData =
                 repository.getCurrencyWithPricesByCode(priceListResponse.baseCurrencyCode!!)
             // map response to db model
-            val prices = PriceMapper.responseToDBModelList(priceListResponse)
+            val prices = mapper.responseToDBModelList(priceListResponse)
             // update prices
             val updatedAt = priceListResponse.date!!
             dbData.submitPrices(prices, updatedAt)
@@ -107,6 +106,25 @@ class PriceUpdateWorker(
 
         private fun deserialize(data: String?): List<String> {
             return gson.fromJson(data, Array<String>::class.java).toList()
+        }
+    }
+
+    class Factory @Inject constructor(
+        private val repository: Repository,
+        private val apiService: ApiService,
+        private val mapper: PriceMapper,
+    ): InstanceWorkerFactory {
+        override fun create(
+            context: Context,
+            workerParameters: WorkerParameters
+        ): ListenableWorker {
+            return PriceUpdateWorker(
+                context,
+                workerParameters,
+                repository,
+                apiService,
+                mapper
+            )
         }
     }
 
