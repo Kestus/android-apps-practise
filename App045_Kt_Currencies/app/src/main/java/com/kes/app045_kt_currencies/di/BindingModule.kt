@@ -1,4 +1,4 @@
-package com.kes.app045_kt_currencies.data.di
+package com.kes.app045_kt_currencies.di
 
 import com.kes.app045_kt_currencies.data.repository.RepositoryImpl
 import com.kes.app045_kt_currencies.domain.Repository

@@ -1,6 +1,6 @@
-package com.kes.app045_kt_currencies.data.di
+package com.kes.app045_kt_currencies.di
 
-import com.kes.app045_kt_currencies.data.di.qualifiers.CodeQualifier
+import com.kes.app045_kt_currencies.di.qualifiers.CodeQualifier
 import com.kes.app045_kt_currencies.presentation.fragments.CurrencyListFragment
 import com.kes.app045_kt_currencies.presentation.fragments.PriceListFragment
 import dagger.BindsInstance

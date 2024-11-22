@@ -1,4 +1,4 @@
-package com.kes.app045_kt_currencies.data.di
+package com.kes.app045_kt_currencies.di
 
 import android.app.Application
 import com.kes.app045_kt_currencies.data.network.ApiService

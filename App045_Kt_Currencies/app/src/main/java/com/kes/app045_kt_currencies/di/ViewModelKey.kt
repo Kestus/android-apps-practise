@@ -1,4 +1,4 @@
-package com.kes.app045_kt_currencies.data.di
+package com.kes.app045_kt_currencies.di
 
 import androidx.lifecycle.ViewModel
 import dagger.MapKey
