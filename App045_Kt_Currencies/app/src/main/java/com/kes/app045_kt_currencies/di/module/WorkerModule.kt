@@ -1,5 +1,6 @@
-package com.kes.app045_kt_currencies.di
+package com.kes.app045_kt_currencies.di.module
 
+import com.kes.app045_kt_currencies.di.key.WorkerKey
 import com.kes.app045_kt_currencies.domain.workers.InstanceWorkerFactory
 import com.kes.app045_kt_currencies.domain.workers.CurrencyUpdateWorker
 import com.kes.app045_kt_currencies.domain.workers.PriceUpdateWorker
