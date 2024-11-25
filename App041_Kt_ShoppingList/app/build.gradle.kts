@@ -54,20 +54,22 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     // Room
-    val roomVersion = "2.6.1"
-    implementation("androidx.room:room-runtime:$roomVersion")
-    ksp("androidx.room:room-compiler:$roomVersion")
-    implementation("androidx.room:room-ktx:$roomVersion")
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
 
     // Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation(libs.kotlinx.coroutines.android)
 
     // LifeCycle
-    val lifecycleVersion = "2.8.6"
     // ViewModel
-    implementation("androidx.lifecycle:lifecycle-viewmodel:$lifecycleVersion")
+    implementation(libs.androidx.lifecycle.viewmodel)
     // LiveData
-    implementation("androidx.lifecycle:lifecycle-livedata:$lifecycleVersion")
+    implementation(libs.androidx.lifecycle.livedata)
     // Annotation processor
-    ksp("androidx.lifecycle:lifecycle-compiler:$lifecycleVersion")
+    ksp(libs.androidx.lifecycle.compiler)
+
+    // Dagger2
+    implementation(libs.dagger)
+    ksp(libs.dagger.compiler)
 }

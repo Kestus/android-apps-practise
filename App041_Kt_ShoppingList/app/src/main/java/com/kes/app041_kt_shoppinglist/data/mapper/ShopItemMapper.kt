@@ -1,8 +1,9 @@
-package com.kes.app041_kt_shoppinglist.data
+package com.kes.app041_kt_shoppinglist.data.mapper
 
-import com.kes.app041_kt_shoppinglist.domain.ShopItem
+import com.kes.app041_kt_shoppinglist.data.database.ShopItemDBModel
+import com.kes.app041_kt_shoppinglist.domain.model.ShopItem
 
-class ShopItemMapper {
+object ShopItemMapper {
 
     fun mapEntityToDBModel(item: ShopItem): ShopItemDBModel {
         return ShopItemDBModel(

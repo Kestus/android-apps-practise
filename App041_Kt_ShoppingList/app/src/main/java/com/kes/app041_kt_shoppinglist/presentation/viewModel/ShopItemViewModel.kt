@@ -1,26 +1,24 @@
 package com.kes.app041_kt_shoppinglist.presentation.viewModel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kes.app041_kt_shoppinglist.data.ShopListRepositoryImpl
-import com.kes.app041_kt_shoppinglist.domain.ShopItem
+import com.kes.app041_kt_shoppinglist.data.RepositoryImpl
+import com.kes.app041_kt_shoppinglist.domain.Repository
+import com.kes.app041_kt_shoppinglist.domain.model.ShopItem
 import com.kes.app041_kt_shoppinglist.domain.useCases.AddShopItemUseCase
 import com.kes.app041_kt_shoppinglist.domain.useCases.EditShopItemUseCase
 import com.kes.app041_kt_shoppinglist.domain.useCases.GetShopItemUseCase
+import com.kes.app041_kt_shoppinglist.domain.useCases.GetShopListUseCase
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ShopItemViewModel(
-    application: Application
-) : AndroidViewModel(application) {
-
-    private val repository = ShopListRepositoryImpl(application)
-
-    private val getShopItemUseCase = GetShopItemUseCase(repository)
-    private val addShopItemUseCase = AddShopItemUseCase(repository)
-    private val editShopItemUseCase = EditShopItemUseCase(repository)
+class ShopItemViewModel @Inject constructor(
+    private val getShopItemUseCase: GetShopItemUseCase,
+    private val addShopItemUseCase: AddShopItemUseCase,
+    private val editShopItemUseCase: EditShopItemUseCase,
+) : ViewModel() {
 
     private val _errorInputName = MutableLiveData<Boolean>()
     val errorInputName: LiveData<Boolean> get() = _errorInputName
@@ -38,7 +36,7 @@ class ShopItemViewModel(
     val finished: LiveData<Unit> get() = _finished
 
     fun getShopItem(id: Int) = viewModelScope.launch {
-        val item = getShopItemUseCase.getShopItem(id)
+        val item = getShopItemUseCase(id)
         _currentShopItem.value = item
     }
 
@@ -52,7 +50,7 @@ class ShopItemViewModel(
 
         val item = ShopItem(name, count)
         launchToFinish {
-            addShopItemUseCase.addShopItem(item)
+            addShopItemUseCase(item)
         }
     }
 
@@ -67,7 +65,7 @@ class ShopItemViewModel(
         _currentShopItem.value?.let {
             val item = it.copy(name = name, count = count)
             launchToFinish {
-                editShopItemUseCase.editShopItem(item)
+                editShopItemUseCase(item)
             }
         }
     }

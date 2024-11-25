@@ -1,4 +1,4 @@
-package com.kes.app041_kt_shoppinglist.data
+package com.kes.app041_kt_shoppinglist.data.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

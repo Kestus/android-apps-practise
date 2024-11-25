@@ -1,4 +1,4 @@
-package com.kes.app041_kt_shoppinglist.domain
+package com.kes.app041_kt_shoppinglist.domain.model
 
 
 data class ShopItem(

@@ -1,10 +1,11 @@
 package com.kes.app041_kt_shoppinglist.domain.useCases
 
-import com.kes.app041_kt_shoppinglist.domain.ShopItem
-import com.kes.app041_kt_shoppinglist.domain.ShopListRepositoryInterface
+import com.kes.app041_kt_shoppinglist.domain.model.ShopItem
+import com.kes.app041_kt_shoppinglist.domain.Repository
+import javax.inject.Inject
 
-class GetShopItemUseCase (
-    private val repository: ShopListRepositoryInterface
+class GetShopItemUseCase @Inject constructor(
+    private val repository: Repository
 ) {
-    suspend fun getShopItem(id: Int): ShopItem = repository.getShopItem(id)
+    suspend operator fun invoke(id: Int): ShopItem = repository.getShopItem(id)
 }

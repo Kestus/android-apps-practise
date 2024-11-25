@@ -8,13 +8,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.kes.app041_kt_shoppinglist.R
-import com.kes.app041_kt_shoppinglist.domain.ShopItem
+import com.kes.app041_kt_shoppinglist.domain.model.ShopItem
 
 class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnFragmentFinishedListener {
 
     private lateinit var screenMode: String
     private var shopItemID: Int = ShopItem.UNDEFINED_ID
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
