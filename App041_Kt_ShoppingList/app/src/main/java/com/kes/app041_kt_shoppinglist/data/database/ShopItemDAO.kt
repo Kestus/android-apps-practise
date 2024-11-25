@@ -1,4 +1,4 @@
-package com.kes.app041_kt_shoppinglist.data
+package com.kes.app041_kt_shoppinglist.data.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
@@ -6,8 +6,6 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
-import com.kes.app041_kt_shoppinglist.domain.ShopItem
 
 @Dao
 interface ShopItemDAO {

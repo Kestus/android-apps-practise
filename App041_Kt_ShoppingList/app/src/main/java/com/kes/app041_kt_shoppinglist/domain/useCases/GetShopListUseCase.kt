@@ -1,11 +1,12 @@
 package com.kes.app041_kt_shoppinglist.domain.useCases
 
 import androidx.lifecycle.LiveData
-import com.kes.app041_kt_shoppinglist.domain.ShopItem
-import com.kes.app041_kt_shoppinglist.domain.ShopListRepositoryInterface
+import com.kes.app041_kt_shoppinglist.domain.model.ShopItem
+import com.kes.app041_kt_shoppinglist.domain.Repository
+import javax.inject.Inject
 
-class GetShopListUseCase (
-    private val repository: ShopListRepositoryInterface
+class GetShopListUseCase @Inject constructor(
+    private val repository: Repository
 ) {
-    fun getShopList(): LiveData<List<ShopItem>> = repository.getShopList()
+    operator fun invoke(): LiveData<List<ShopItem>> = repository.getShopList()
 }

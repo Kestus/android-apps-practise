@@ -1,9 +1,9 @@
 package com.kes.app041_kt_shoppinglist.domain
 
 import androidx.lifecycle.LiveData
-import com.kes.app041_kt_shoppinglist.data.ShopItemDAO
+import com.kes.app041_kt_shoppinglist.domain.model.ShopItem
 
-interface ShopListRepositoryInterface {
+interface Repository {
 
     suspend fun addShopItem(item: ShopItem)
 

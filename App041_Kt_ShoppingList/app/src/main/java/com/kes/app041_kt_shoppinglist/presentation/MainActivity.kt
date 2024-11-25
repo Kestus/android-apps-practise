@@ -6,23 +6,38 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.kes.app041_kt_shoppinglist.MainApplication
 import com.kes.app041_kt_shoppinglist.R
 import com.kes.app041_kt_shoppinglist.databinding.ActivityMainBinding
 import com.kes.app041_kt_shoppinglist.presentation.adapter.ShopListAdapter
+import com.kes.app041_kt_shoppinglist.presentation.viewModel.AppViewModelFactory
 import com.kes.app041_kt_shoppinglist.presentation.viewModel.MainViewModel
-import com.kes.app041_kt_shoppinglist.presentation.viewModel.MainViewModelFactory
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), ShopItemFragment.OnFragmentFinishedListener {
 
-    private lateinit var viewModel: MainViewModel
-    private lateinit var adapter: ShopListAdapter
+    private val component by lazy {
+        (application as MainApplication).component
+    }
+
+    @Inject
+    lateinit var viewModelFactory: AppViewModelFactory
+    private val viewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
+    }
+
+    @Inject
+    lateinit var adapter: ShopListAdapter
 
     private lateinit var binding: ActivityMainBinding
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        component.inject(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -33,11 +48,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnFragmentFinishedLis
             insets
         }
         // RecyclerView
-        adapter = ShopListAdapter()
         setupRecyclerView()
-
-        // ViewModel
-        setupViewModel()
 
         // Observers
         observeShopList()
@@ -65,11 +76,6 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnFragmentFinishedLis
                 ShopListAdapter.MAX_POOL_SIZE
             )
         }
-    }
-
-    private fun setupViewModel() {
-        val factory = MainViewModelFactory(application)
-        viewModel = ViewModelProvider(this, factory)[MainViewModel::class.java]
     }
 
     private fun addItemClickListener() {

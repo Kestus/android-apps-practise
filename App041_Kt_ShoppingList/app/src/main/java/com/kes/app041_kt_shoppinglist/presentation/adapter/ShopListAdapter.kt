@@ -4,14 +4,17 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.kes.app041_kt_shoppinglist.R
 import com.kes.app041_kt_shoppinglist.databinding.ShopItemActiveBinding
 import com.kes.app041_kt_shoppinglist.databinding.ShopItemInactiveBinding
-import com.kes.app041_kt_shoppinglist.domain.ShopItem
+import com.kes.app041_kt_shoppinglist.domain.model.ShopItem
+import javax.inject.Inject
 
-class ShopListAdapter
-    : ListAdapter<ShopItem, ShopItemViewHolder>(ShopItemDiffCallback()) {
+class ShopListAdapter @Inject constructor()
+    : ListAdapter<ShopItem, ShopListAdapter.ShopItemViewHolder>(ShopItemDiffCallback()) {
 
     var onShopItemLongClickListener: ((ShopItem) -> Unit)? = null
     var onShopItemClickListener: ((ShopItem) -> Unit)? = null
@@ -66,6 +69,18 @@ class ShopListAdapter
             ViewTypes.ACTIVE.value
         } else {
             ViewTypes.INACTIVE.value
+        }
+    }
+
+    class ShopItemViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root)
+
+    class ShopItemDiffCallback: DiffUtil.ItemCallback<ShopItem>() {
+        override fun areItemsTheSame(oldItem: ShopItem, newItem: ShopItem): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: ShopItem, newItem: ShopItem): Boolean {
+            return oldItem == newItem
         }
     }
 }

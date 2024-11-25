@@ -1,19 +1,17 @@
 package com.kes.app041_kt_shoppinglist.data
 
-import android.app.Application
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.map
-import androidx.lifecycle.switchMap
-import com.kes.app041_kt_shoppinglist.domain.ShopItem
-import com.kes.app041_kt_shoppinglist.domain.ShopListRepositoryInterface
+import com.kes.app041_kt_shoppinglist.data.database.ShopItemDAO
+import com.kes.app041_kt_shoppinglist.data.mapper.ShopItemMapper
+import com.kes.app041_kt_shoppinglist.domain.model.ShopItem
+import com.kes.app041_kt_shoppinglist.domain.Repository
+import javax.inject.Inject
 
-class ShopListRepositoryImpl(
-    application: Application
-): ShopListRepositoryInterface {
-
-    private val dao = AppDatabase.getInstance(application).shopItemDAO
-    private val mapper = ShopItemMapper()
+class RepositoryImpl @Inject constructor(
+    private val dao: ShopItemDAO,
+    private val mapper: ShopItemMapper
+): Repository {
 
     override suspend fun addShopItem(item: ShopItem) {
         dao.insert(mapper.mapEntityToDBModel(item))
