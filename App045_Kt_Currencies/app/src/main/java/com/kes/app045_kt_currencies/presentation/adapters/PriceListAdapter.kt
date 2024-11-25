@@ -8,8 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kes.app045_kt_currencies.databinding.PriceCardBinding
 import com.kes.app045_kt_currencies.domain.model.RelativePriceItem
 import java.util.Locale
+import javax.inject.Inject
 
-class PriceListAdapter :
+class PriceListAdapter @Inject constructor() :
     ListAdapter<RelativePriceItem, PriceListAdapter.ViewHolder>(DiffCallback) {
 
     var onItemClickListener: ((RelativePriceItem) -> Unit)? = null

@@ -12,7 +12,7 @@ import com.kes.app045_kt_currencies.data.database.entity.CurrencyWithPrices
 import com.kes.app045_kt_currencies.data.database.entity.RelativePriceDBModel
 
 @Dao
-interface RelativePriceDao {
+interface PriceDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRelativePrice(price: RelativePriceDBModel)

@@ -1,38 +1,46 @@
 package com.kes.app045_kt_currencies.presentation.viewModel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import com.kes.app045_kt_currencies.data.repository.RepositoryImpl
+import androidx.lifecycle.ViewModel
+import com.kes.app045_kt_currencies.di.qualifiers.CodeQualifier
+import com.kes.app045_kt_currencies.domain.model.CurrencyItem
+import com.kes.app045_kt_currencies.domain.model.RelativePriceItem
+import com.kes.app045_kt_currencies.domain.useCases.FetchPriceListForCurrencyUseCase
 import com.kes.app045_kt_currencies.domain.useCases.GetCurrencyUseCase
 import com.kes.app045_kt_currencies.domain.useCases.GetPriceListUseCase
 import com.kes.app045_kt_currencies.domain.useCases.UpdateCurrencyUseCase
+import javax.inject.Inject
 
-class PriceListViewModel(
-    application: Application, code: String
-) : AndroidViewModel(application) {
+@Suppress("UNUSED_PROPERTY")
+class PriceListViewModel @Inject constructor(
+    @CodeQualifier code: String?,
+    private val getCurrency: GetCurrencyUseCase,
+    private val getPriceList: GetPriceListUseCase,
+    private val updateCurrency: UpdateCurrencyUseCase,
+    private val fetchPriceListUseCase: FetchPriceListForCurrencyUseCase
+) : ViewModel() {
 
-    private val repository = RepositoryImpl(application)
-
-    val updateCurrency = UpdateCurrencyUseCase(repository)
-    val getPriceList = GetPriceListUseCase(repository)
-    val getCurrency = GetCurrencyUseCase(repository)
-
-    val currentItem = getCurrency(code)
-    val priceList = getPriceList(code)
+    val currencyItem: LiveData<CurrencyItem>
+    val priceList: LiveData<List<RelativePriceItem>>
 
     init {
-        repository.loadPriceListForCurrency(code)
+        if (code == null) throw RuntimeException("PriceListViewModel requires currency code")
+        currencyItem = getCurrency(code)
+        priceList = getPriceList(code)
+        fetchPriceListUseCase(code)
     }
 
     val isFavourite = MediatorLiveData<Boolean>().apply {
-        addSource(currentItem) {
-            this.value = it.favourite
+        addSource(currencyItem) {
+            it?.let {
+                this.value = it.favourite
+            }
         }
     }
 
     fun toggleFavourite() {
-        currentItem.value?.let {
+        currencyItem.value?.let {
             it.favourite = !it.favourite
             isFavourite.value = it.favourite
             saveItemChanges()
@@ -40,7 +48,7 @@ class PriceListViewModel(
     }
 
     private fun saveItemChanges() {
-        currentItem.value?.let {
+        currencyItem.value?.let {
             updateCurrency(it)
         }
     }

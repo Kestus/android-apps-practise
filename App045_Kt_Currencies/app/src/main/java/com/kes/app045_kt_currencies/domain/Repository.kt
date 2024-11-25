@@ -28,7 +28,9 @@ interface Repository {
 
     fun updateCurrencyWithPrices(currency: CurrencyWithPrices)
 
-    fun loadCurrencies()
+    fun fetchCurrencyList()
 
-    fun loadPriceListForCurrency(code: String)
+    fun fetchPriceListForCurrency(code: String)
+
+    fun startPeriodicWorkUpdateFavouriteCurrencies()
 }

@@ -1,11 +1,12 @@
 package com.kes.app045_kt_currencies.data.repository
 
-import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
+import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
-import com.kes.app045_kt_currencies.data.database.AppDatabase
+import com.kes.app045_kt_currencies.data.database.dao.CurrencyDao
+import com.kes.app045_kt_currencies.data.database.dao.PriceDao
 import com.kes.app045_kt_currencies.data.database.entity.CurrencyDBModel
 import com.kes.app045_kt_currencies.data.database.entity.CurrencyWithPrices
 import com.kes.app045_kt_currencies.data.mapper.CurrencyMapper
@@ -18,19 +19,23 @@ import com.kes.app045_kt_currencies.domain.workers.PriceUpdateWorker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class RepositoryImpl(application: Application) : Repository {
-
-    private val database = AppDatabase.getInstance(application)
-    private val currencyDao = database.currencyDao
-    private val pricesDao = database.pricesDao
-
-    private val workManager = WorkManager.getInstance(application)
+class RepositoryImpl @Inject constructor(
+    private val currencyDao: CurrencyDao,
+    private val pricesDao: PriceDao,
+    private val workManager: WorkManager,
+    private val mapper: CurrencyMapper,
+) : Repository {
 
     private val scope = CoroutineScope(Dispatchers.IO)
 
+    init {
+        startPeriodicWorkUpdateFavouriteCurrencies()
+    }
+
     override fun getAll(): LiveData<List<CurrencyItem>> {
-        return currencyDao.getAllLiveData().map { CurrencyMapper.mapDBModelToItemList(it) }
+        return currencyDao.getAllLiveData().map { mapper.mapDBModelToItemList(it) }
     }
 
     override fun getAllCodes(): List<String> {
@@ -76,19 +81,27 @@ class RepositoryImpl(application: Application) : Repository {
         }
     }
 
-    override fun loadCurrencies() {
+    override fun fetchCurrencyList() {
         workManager.enqueueUniqueWork(
             CurrencyUpdateWorker.WORK_NAME,
             ExistingWorkPolicy.KEEP,
-            CurrencyUpdateWorker.makeRequest(this)
+            CurrencyUpdateWorker.makeRequest()
         )
     }
 
-    override fun loadPriceListForCurrency(code: String) {
+    override fun fetchPriceListForCurrency(code: String) {
         workManager.enqueueUniqueWork(
             PriceUpdateWorker.WORK_NAME,
             ExistingWorkPolicy.KEEP,
-            PriceUpdateWorker.makeRequest(this, code)
+            PriceUpdateWorker.makeRequest(code)
+        )
+    }
+
+    override fun startPeriodicWorkUpdateFavouriteCurrencies() {
+        workManager.enqueueUniquePeriodicWork(
+            PriceUpdateWorker.WORK_NAME_PERIODIC,
+            ExistingPeriodicWorkPolicy.UPDATE,
+            PriceUpdateWorker.makePeriodicRequest()
         )
     }
 }

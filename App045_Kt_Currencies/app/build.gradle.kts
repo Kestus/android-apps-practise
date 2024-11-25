@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
 
-    id("com.google.devtools.ksp")
+    id("com.google.devtools.ksp") version "2.0.21-1.0.25"
     id("kotlin-parcelize")
 
     // Navigation Directions
@@ -85,6 +85,10 @@ dependencies {
     // Views/Fragments integration
     implementation(libs.androidx.navigation.fragment)
     implementation(libs.androidx.navigation.ui)
+
+    // Dagger2
+    implementation(libs.dagger)
+    ksp(libs.dagger.compiler)
 
 
 }

@@ -8,8 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kes.app045_kt_currencies.R
 import com.kes.app045_kt_currencies.databinding.CurrencyCardBinding
 import com.kes.app045_kt_currencies.domain.model.CurrencyItem
+import javax.inject.Inject
 
-class CurrencyListAdapter :
+class CurrencyListAdapter @Inject constructor():
     ListAdapter<CurrencyItem, CurrencyListAdapter.ViewHolder>(DiffCallback) {
 
     var onItemClickListener: ((CurrencyItem) -> Unit)? = null
