@@ -1,6 +1,7 @@
-package com.kes.app045_kt_currencies.di
+package com.kes.app045_kt_currencies.di.module
 
 import androidx.lifecycle.ViewModel
+import com.kes.app045_kt_currencies.di.key.ViewModelKey
 import com.kes.app045_kt_currencies.presentation.viewModel.CurrencyListViewModel
 import com.kes.app045_kt_currencies.presentation.viewModel.PriceListViewModel
 import dagger.Binds

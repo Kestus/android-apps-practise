@@ -1,4 +1,4 @@
-package com.kes.app045_kt_currencies.di
+package com.kes.app045_kt_currencies.di.key
 
 import androidx.work.ListenableWorker
 import dagger.MapKey
