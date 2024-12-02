@@ -1,6 +1,7 @@
 package com.kes.app041_kt_shoppinglist.di
 
 import android.app.Application
+import com.kes.app041_kt_shoppinglist.data.provider.ShopListProvider
 import com.kes.app041_kt_shoppinglist.di.module.DataModule
 import com.kes.app041_kt_shoppinglist.di.module.ViewModelModule
 import com.kes.app041_kt_shoppinglist.presentation.MainActivity
@@ -20,6 +21,8 @@ interface ApplicationComponent {
     fun inject(activity: MainActivity)
 
     fun inject(fragment: ShopItemFragment)
+
+    fun inject(provider: ShopListProvider)
 
     @Component.Factory
     interface Factory {

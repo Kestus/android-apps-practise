@@ -26,6 +26,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <provider
+            android:authorities="com.kes.app041_kt_shoppinglist"
+            android:name=".data.provider.ShopListProvider"
+            android:exported="true" />
     </application>
 
 </manifest>
