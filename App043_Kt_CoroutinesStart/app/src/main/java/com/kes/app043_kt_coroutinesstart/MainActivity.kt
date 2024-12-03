@@ -14,9 +14,11 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.kes.app043_kt_coroutinesstart.databinding.ActivityMainBinding
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.concurrent.thread
+import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,11 +37,30 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnDownload.setOnClickListener {
-//            lifecycleScope.launch {
-//                loadData()
-//            }
+            binding.apply {
+                progressBar.isVisible = true
+                btnDownload.isEnabled = false
+                val deferredCity = lifecycleScope.async { loadCity() }
+                val deferredTemp = lifecycleScope.async { loadTemp() }
 
-            loadDataWithoutCoroutines()
+                lifecycleScope.launch {
+                    val city = deferredCity.await()
+                    tvCity.text = city
+                    val temp = deferredTemp.await()
+                    tvTemp.text = temp.toString()
+                    progressBar.isVisible = false
+                    btnDownload.isEnabled = true
+                    Toast.makeText(
+                        this@MainActivity,
+                        "City: $city, Temperature: $temp",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+            }
+
+
+//            loadDataWithoutCoroutines()
         }
     }
 
@@ -51,7 +72,7 @@ class MainActivity : AppCompatActivity() {
             val city = loadCity()
             tvCity.text = city
 
-            val temp = loadTemp(city)
+            val temp = loadTemp()
             tvTemp.text = temp.toString()
 
             progressBar.isVisible = false
@@ -64,16 +85,12 @@ class MainActivity : AppCompatActivity() {
         return "Moscow"
     }
 
-    private suspend fun loadTemp(city: String): Int {
-        Toast.makeText(
-            this,
-            "Loading temp for city: $city",
-            Toast.LENGTH_SHORT
-        ).show()
-        delay(2000)
-        return 9
+    private suspend fun loadTemp(): Int {
+        delay(3000)
+        return Random.nextInt(-20, 40)
     }
 
+    // State machine
     private fun loadDataWithoutCoroutines(step: Int = 0, obj: Any? = null) {
         when (step) {
             0 -> {
