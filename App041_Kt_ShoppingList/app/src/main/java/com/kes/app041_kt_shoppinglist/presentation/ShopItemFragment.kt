@@ -129,7 +129,13 @@ class ShopItemFragment : Fragment() {
     private fun initAddMode() {
         binding.apply {
             btnSubmit.setOnClickListener {
-                shopItemViewModel.addShopItem(etName.text.toString(), etCount.text.toString())
+//                shopItemViewModel.addShopItem(etName.text.toString(), etCount.text.toString())
+                // Add with content provider
+                shopItemViewModel.addShopItemProvider(
+                    etName.text.toString(),
+                    etCount.text.toString()
+                )
+
             }
         }
     }
@@ -138,7 +144,13 @@ class ShopItemFragment : Fragment() {
         shopItemViewModel.getShopItem(shopItemID)
         binding.apply {
             btnSubmit.setOnClickListener {
-                shopItemViewModel.editShopItem(etName.text?.toString(), etCount.text?.toString())
+//                shopItemViewModel.editShopItem(etName.text?.toString(), etCount.text?.toString())
+
+                // Edit with content provider
+                shopItemViewModel.editShopItemProvider(
+                    etName.text?.toString(),
+                    etCount.text?.toString()
+                )
             }
         }
     }

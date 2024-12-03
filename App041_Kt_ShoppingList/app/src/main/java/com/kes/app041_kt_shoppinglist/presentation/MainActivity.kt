@@ -1,21 +1,26 @@
 package com.kes.app041_kt_shoppinglist.presentation
 
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.kes.app041_kt_shoppinglist.MainApplication
 import com.kes.app041_kt_shoppinglist.R
 import com.kes.app041_kt_shoppinglist.databinding.ActivityMainBinding
+import com.kes.app041_kt_shoppinglist.domain.model.ShopItem
 import com.kes.app041_kt_shoppinglist.presentation.adapter.ShopListAdapter
 import com.kes.app041_kt_shoppinglist.presentation.viewModel.AppViewModelFactory
 import com.kes.app041_kt_shoppinglist.presentation.viewModel.MainViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), ShopItemFragment.OnFragmentFinishedListener {
@@ -34,6 +39,8 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnFragmentFinishedLis
     lateinit var adapter: ShopListAdapter
 
     private lateinit var binding: ActivityMainBinding
+
+    private val ioScope = CoroutineScope(Dispatchers.IO)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,6 +65,29 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnFragmentFinishedLis
         addFabClickListener()
         addItemLongClickListener()
         addItemSwipeListener()
+
+
+        testProvider()
+
+    }
+
+    private fun testProvider() {
+        ioScope.launch {
+            val cursor = contentResolver.query(
+                Uri.parse("content://com.kes.app041_kt_shoppinglist/items"),
+                null,
+                null,
+                null,
+                null,
+                null
+            )
+
+            while (cursor?.moveToNext() == true) {
+                val item = ShopItem.parse(cursor)
+                Log.d("TAG", "testProvider: $item")
+            }
+            cursor?.close()
+        }
     }
 
     private fun observeShopList() {
@@ -121,7 +151,10 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnFragmentFinishedLis
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val item = adapter.currentList[viewHolder.adapterPosition]
-                viewModel.deleteShopItem(item)
+//                viewModel.deleteShopItem(item)
+
+                // delete through content provider
+                viewModel.deleteShopItemProvider(item)
             }
 
         }

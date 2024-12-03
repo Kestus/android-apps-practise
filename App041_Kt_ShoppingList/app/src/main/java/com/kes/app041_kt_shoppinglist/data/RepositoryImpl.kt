@@ -26,11 +26,11 @@ class RepositoryImpl @Inject constructor(
     }
 
     override suspend fun getShopItem(id: Int): ShopItem {
-        val item = dao.getByID(id)
+        val item = dao.getItemById(id)
         return mapper.mapDBModelToEntity(item)
     }
 
-    override fun getShopList(): LiveData<List<ShopItem>> = dao.getAll().map {
+    override fun getShopList(): LiveData<List<ShopItem>> = dao.getShopListLiveData().map {
         mapper.mapListDBModelToListEntity(it)
     }
 

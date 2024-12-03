@@ -1,16 +1,18 @@
 package com.kes.app041_kt_shoppinglist.presentation.viewModel
 
+import android.content.ContentResolver
+import android.content.ContentValues
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kes.app041_kt_shoppinglist.data.RepositoryImpl
-import com.kes.app041_kt_shoppinglist.domain.Repository
 import com.kes.app041_kt_shoppinglist.domain.model.ShopItem
 import com.kes.app041_kt_shoppinglist.domain.useCases.AddShopItemUseCase
 import com.kes.app041_kt_shoppinglist.domain.useCases.EditShopItemUseCase
 import com.kes.app041_kt_shoppinglist.domain.useCases.GetShopItemUseCase
-import com.kes.app041_kt_shoppinglist.domain.useCases.GetShopListUseCase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,7 +20,10 @@ class ShopItemViewModel @Inject constructor(
     private val getShopItemUseCase: GetShopItemUseCase,
     private val addShopItemUseCase: AddShopItemUseCase,
     private val editShopItemUseCase: EditShopItemUseCase,
+    private val contentResolver: ContentResolver,
 ) : ViewModel() {
+
+    private val ioScope = CoroutineScope(Dispatchers.IO)
 
     private val _errorInputName = MutableLiveData<Boolean>()
     val errorInputName: LiveData<Boolean> get() = _errorInputName
@@ -54,6 +59,30 @@ class ShopItemViewModel @Inject constructor(
         }
     }
 
+    fun addShopItemProvider(inputName: String?, inputCount: String?) {
+        val name = parseName(inputName)
+        val count = parseCount(inputCount)
+
+        if (!inputIsValid(name, count)) {
+            return
+        }
+
+        // Add through content provider
+        launchToFinish {
+            ioScope.launch {
+                contentResolver.insert(
+                    Uri.parse("content://com.kes.app041_kt_shoppinglist/items"),
+                    ContentValues().apply {
+                        put("id", 0)
+                        put("name", name)
+                        put("count", count)
+                        put("enabled", true)
+                    }
+                )
+            }
+        }
+    }
+
     fun editShopItem(inputName: String?, inputCount: String?) {
         val name = parseName(inputName)
         val count = parseCount(inputCount)
@@ -68,6 +97,30 @@ class ShopItemViewModel @Inject constructor(
                 editShopItemUseCase(item)
             }
         }
+    }
+
+    fun editShopItemProvider(inputName: String?, inputCount: String?) {
+        val name = parseName(inputName)
+        val count = parseCount(inputCount)
+
+        if (!inputIsValid(name, count)) {
+            return
+        }
+
+        _currentShopItem.value?.let {
+            launchToFinish {
+                val updatedItem = it.copy(name = name, count = count)
+                ioScope.launch {
+                    contentResolver.update(
+                        Uri.parse("content://com.kes.app041_kt_shoppinglist/items"),
+                        updatedItem.contentValues,
+                        null,
+                        arrayOf(it.id.toString())
+                    )
+                }
+            }
+        }
+
     }
 
     private fun launchToFinish(task: suspend () -> Unit) {
