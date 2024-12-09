@@ -21,4 +21,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "App048_Kt_Factorial"
 include(":app")
- 

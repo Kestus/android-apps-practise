@@ -15,6 +15,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="24dp"
+        app:errorEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -23,6 +24,7 @@
             android:id="@+id/et_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="number"
             android:hint="Number" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -43,19 +45,41 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 
-    <TextView
-        android:id="@+id/tw_output"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:fontFamily="serif"
-        tools:text="4231904123-08924310-423198-041238124307967091236479432679892319083247623419872389234586792349078123978234712940762939023279648390239076843290234709834529028371459082345924098402532398457198034983272930237968449782363452678923490585436289032549863249068"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_submit" />
+        app:layout_constraintTop_toBottomOf="@id/btn_submit">
+
+        <TextView
+            android:id="@+id/tw_output"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="serif"
+            android:textSize="18sp"
+            tools:text="4231904123-08924310-423198-041238124307967091236479432679892319083247623419872389234586792349078123978234712940762939023279648390239076843290234709834529028371459082345924098402532398457198034983272930237968449782363452678923490585436289032549863249068" />
+
+
+    </ScrollView>
+
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateTint="#F50057"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
