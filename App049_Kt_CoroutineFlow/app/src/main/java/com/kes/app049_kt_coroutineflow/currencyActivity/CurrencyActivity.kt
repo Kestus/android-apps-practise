@@ -1,6 +1,7 @@
 package com.kes.app049_kt_coroutineflow.currencyActivity
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -18,7 +19,6 @@ class CurrencyActivity : AppCompatActivity() {
     private val viewModel by lazy {
         ViewModelProvider(this)[CurrencyViewModel::class.java]
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +47,15 @@ class CurrencyActivity : AppCompatActivity() {
                 is CurrencyState.Loading -> binding.progressBar.visibility = View.VISIBLE
             }
         }
+    }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadData()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.stopLoading()
     }
 }
