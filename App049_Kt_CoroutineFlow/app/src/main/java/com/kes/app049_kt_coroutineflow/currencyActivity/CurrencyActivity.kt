@@ -1,7 +1,6 @@
 package com.kes.app049_kt_coroutineflow.currencyActivity
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -49,13 +48,4 @@ class CurrencyActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.loadData()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        viewModel.stopLoading()
-    }
 }
