@@ -37,6 +37,11 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, UsersActivity::class.java)
             startActivity(intent)
         }
+
+        binding.btnCurrency.setOnClickListener {
+            val intent = Intent(this, CurrencyActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun test() {
