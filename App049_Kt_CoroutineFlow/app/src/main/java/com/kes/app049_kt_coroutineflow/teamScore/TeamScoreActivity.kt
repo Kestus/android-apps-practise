@@ -28,8 +28,6 @@ class TeamScoreActivity : AppCompatActivity() {
         ViewModelProvider(this)[TeamScoreViewModel::class.java]
     }
 
-    private val scope = CoroutineScope(Dispatchers.Main)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -56,7 +54,7 @@ class TeamScoreActivity : AppCompatActivity() {
     private fun observeViewModel() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                viewModel.stateFlow
+                viewModel.state
                     .collect {
                         Log.d("TAG", "collect")
                         when (it) {
