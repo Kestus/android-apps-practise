@@ -13,6 +13,9 @@
         android:theme="@style/Theme.App049_Kt_CoroutineFlow"
         tools:targetApi="31">
         <activity
+            android:name=".teamScore.TeamScoreActivity"
+            android:exported="false" />
+        <activity
             android:name=".currencyActivity.CurrencyActivity"
             android:exported="false" />
         <activity

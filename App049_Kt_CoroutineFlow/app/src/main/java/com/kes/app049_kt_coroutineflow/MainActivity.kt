@@ -10,6 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.kes.app049_kt_coroutineflow.currencyActivity.CurrencyActivity
 import com.kes.app049_kt_coroutineflow.databinding.ActivityMainBinding
+import com.kes.app049_kt_coroutineflow.teamScore.TeamScoreActivity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
@@ -41,6 +42,9 @@ class MainActivity : AppCompatActivity() {
         binding.btnCurrency.setOnClickListener {
             val intent = Intent(this, CurrencyActivity::class.java)
             startActivity(intent)
+        }
+        binding.btnTeamScore.setOnClickListener {
+            startActivity(TeamScoreActivity.newIntent(this))
         }
     }
 

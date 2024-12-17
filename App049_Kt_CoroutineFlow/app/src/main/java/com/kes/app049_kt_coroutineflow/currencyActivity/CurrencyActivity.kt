@@ -43,16 +43,20 @@ class CurrencyActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 viewModel.state.collect {
-                    binding.llContainer.removeAllViews()
-                    binding.progressBar.visibility = View.GONE
-                    binding.fabRefresh.visibility = View.GONE
-                    when (it) {
-                        is CurrencyState.Initial -> {}
 
-                        is CurrencyState.Loading -> binding.progressBar.visibility =
-                            View.VISIBLE
+                    when (it) {
+                        is CurrencyState.Initial -> {
+                            binding.fabRefresh.isEnabled = false
+                            binding.progressBar.visibility = View.GONE
+                        }
+
+                        is CurrencyState.Loading -> {
+                            binding.fabRefresh.isEnabled = false
+                            binding.progressBar.visibility = View.VISIBLE
+                        }
 
                         is CurrencyState.Content -> {
+                            binding.llContainer.removeAllViews()
                             for (currency in it.currencyList) {
                                 val itemBinding = CurrencyItemBinding.inflate(layoutInflater)
                                 itemBinding.itemName.text = currency.name
@@ -60,6 +64,7 @@ class CurrencyActivity : AppCompatActivity() {
                                 binding.llContainer.addView(itemBinding.root)
                             }
                             binding.fabRefresh.visibility = View.VISIBLE
+                            binding.fabRefresh.isEnabled = true
                         }
                     }
                 }

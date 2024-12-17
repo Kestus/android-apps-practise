@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".teamScore.TeamScoreActivity"
+    android:background="#B2EBF2"
+    >
+
+
+    <TextView
+        android:id="@+id/tv_winner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#9CCC65"
+        android:fontFamily="serif"
+        android:gravity="center"
+        android:paddingVertical="20dp"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/btn_team_1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="WINNER"
+        tools:visibility="visible"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_team_1"
+        android:layout_width="0dp"
+        android:layout_height="144dp"
+        android:backgroundTint="#42A5F5"
+        app:cornerRadius="0dp"
+        android:fontFamily="serif"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_team_2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.41000003"
+        android:text="Team 1" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_team_2"
+        android:layout_width="0dp"
+        android:layout_height="144dp"
+        android:backgroundTint="#EF5350"
+        app:cornerRadius="0dp"
+        android:fontFamily="serif"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_team_1"
+        app:layout_constraintTop_toTopOf="@+id/btn_team_1"
+        android:text="Team 2" />
+
+    <TextView
+        android:id="@+id/tv_team_1_score"
+        android:layout_width="0dp"
+        android:layout_height="144sp"
+        android:gravity="center"
+        android:textColor="#42A5F5"
+        android:textSize="64sp"
+        app:layout_constraintEnd_toStartOf="@+id/tv_team_2_score"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_team_1"
+        tools:text="4" />
+
+    <TextView
+        android:id="@+id/tv_team_2_score"
+        android:layout_width="0dp"
+        android:layout_height="144sp"
+        android:gravity="center"
+        android:textColor="#EF5350"
+        android:textSize="64sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_team_2"
+        app:layout_constraintStart_toEndOf="@id/tv_team_1_score"
+        tools:text="5" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
