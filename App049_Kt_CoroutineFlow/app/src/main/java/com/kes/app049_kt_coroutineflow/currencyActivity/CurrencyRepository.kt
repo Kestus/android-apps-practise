@@ -3,7 +3,6 @@ package com.kes.app049_kt_coroutineflow.currencyActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.flow
 import kotlin.random.Random
 
@@ -12,23 +11,21 @@ object CurrencyRepository {
     private val currencyNames = listOf("ASD", "ORE", "AHA", "EOO", "HUH")
     private val currencyList = mutableListOf<Currency>()
 
-    private val _currencyListFlow = MutableSharedFlow<List<Currency>>()
-    val currencyListFlow = _currencyListFlow.asSharedFlow()
-
-    suspend fun loadData() {
-        delay(3000)
-        generateCurrencyList()
-        _currencyListFlow.emit(currencyList)
-    }
+    private val refreshEvents = MutableSharedFlow<Unit>()
 
     fun getCurrencyList(): Flow<List<Currency>> = flow {
+        delay(3000)
+        generateCurrencyList()
         emit(currencyList.toList())
-        while (true) {
+        refreshEvents.collect {
             delay(3000)
             generateCurrencyList()
             emit(currencyList.toList())
-            delay(3000)
         }
+    }
+
+    suspend fun refreshList() {
+        refreshEvents.emit(Unit)
     }
 
     private fun generateCurrencyList() {
