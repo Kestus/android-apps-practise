@@ -3,14 +3,20 @@ package com.kes.app049_kt_coroutineflow.teamScore
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.kes.app049_kt_coroutineflow.databinding.ActivityTeamScoreBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class TeamScoreActivity : AppCompatActivity() {
 
@@ -21,6 +27,8 @@ class TeamScoreActivity : AppCompatActivity() {
     private val viewModel by lazy {
         ViewModelProvider(this)[TeamScoreViewModel::class.java]
     }
+
+    private val scope = CoroutineScope(Dispatchers.Main)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,24 +54,27 @@ class TeamScoreActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        viewModel.state.observe(this) {
-            binding.tvTeam1Score.text = it.score1.toString()
-            binding.tvTeam2Score.text = it.score2.toString()
-            when(it) {
-                is TeamScoreState.Game -> {}
-                is TeamScoreState.Winner -> {
-//                    Toast.makeText(
-//                        this,
-//                        "Winner: ${it.winner}",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-                    binding.apply {
-                        btnTeam1.isEnabled = false
-                        btnTeam2.isEnabled = false
-                        tvWinner.text = "Winner: ${it.winner}"
-                        tvWinner.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                viewModel.stateFlow
+                    .collect {
+                        Log.d("TAG", "collect")
+                        when (it) {
+                            is TeamScoreState.Game -> {
+                                binding.tvTeam1Score.text = it.score1.toString()
+                                binding.tvTeam2Score.text = it.score2.toString()
+                            }
+
+                            is TeamScoreState.Winner -> {
+                                binding.apply {
+                                    btnTeam1.isEnabled = false
+                                    btnTeam2.isEnabled = false
+                                    tvWinner.text = "Winner: ${it.winner}"
+                                    tvWinner.visibility = View.VISIBLE
+                                }
+                            }
+                        }
                     }
-                }
             }
         }
     }
