@@ -1,6 +1,7 @@
 package com.kes.app049_kt_coroutineflow.currencyActivity
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -43,12 +44,8 @@ class CurrencyActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 viewModel.state.collect {
-
                     when (it) {
-                        is CurrencyState.Initial -> {
-                            binding.fabRefresh.isEnabled = false
-                            binding.progressBar.visibility = View.GONE
-                        }
+                        is CurrencyState.Initial -> {}
 
                         is CurrencyState.Loading -> {
                             binding.fabRefresh.isEnabled = false
@@ -63,10 +60,22 @@ class CurrencyActivity : AppCompatActivity() {
                                 itemBinding.itemPrice.text = currency.price.toString()
                                 binding.llContainer.addView(itemBinding.root)
                             }
-                            binding.fabRefresh.visibility = View.VISIBLE
+                            binding.progressBar.visibility = View.GONE
                             binding.fabRefresh.isEnabled = true
                         }
                     }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.state2.collect {
+                when (it) {
+                    is CurrencyState.Content -> {
+                        Log.d("TAG", "observeViewModel: ${it.currencyList.joinToString()}")
+                    }
+
+                    else -> {}
                 }
             }
         }

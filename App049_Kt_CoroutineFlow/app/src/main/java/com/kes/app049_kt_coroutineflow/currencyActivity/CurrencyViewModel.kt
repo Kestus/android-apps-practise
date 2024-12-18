@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
@@ -17,11 +16,18 @@ class CurrencyViewModel : ViewModel() {
 
     private val loadingFlow = MutableSharedFlow<CurrencyState>()
 
-    val state: Flow<CurrencyState> = repository.getCurrencyList()
+    val state: Flow<CurrencyState> = repository.currencyListFlow
         .filter { it.isNotEmpty() }
         .map { CurrencyState.Content(it) as CurrencyState }
         .onStart { emit(CurrencyState.Loading) }
         .mergeWith(loadingFlow)
+
+    val state2: Flow<CurrencyState> = repository.currencyListFlow
+        .filter { it.isNotEmpty() }
+        .map { CurrencyState.Content(it) as CurrencyState }
+        .onStart { emit(CurrencyState.Loading) }
+        .mergeWith(loadingFlow)
+
 
     fun refreshList() {
         viewModelScope.launch {
