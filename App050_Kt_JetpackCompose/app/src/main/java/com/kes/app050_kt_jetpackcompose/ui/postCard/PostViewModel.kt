@@ -1,12 +1,10 @@
-package com.kes.app050_kt_jetpackcompose.ui.viewModel
+package com.kes.app050_kt_jetpackcompose.ui.postCard
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.kes.app050_kt_jetpackcompose.domain.PostItem
-import com.kes.app050_kt_jetpackcompose.domain.StatsItem
 
-class MainViewModel: ViewModel() {
+class PostViewModel: ViewModel() {
 
     private val _postItem = MutableLiveData(PostItem())
     val postItem: LiveData<PostItem> get() = _postItem

@@ -1,4 +1,4 @@
-package com.kes.app050_kt_jetpackcompose.ui.composable
+package com.kes.app050_kt_jetpackcompose.ui.postCard
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
@@ -39,10 +39,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kes.app050_kt_jetpackcompose.R
-import com.kes.app050_kt_jetpackcompose.domain.PostItem
-import com.kes.app050_kt_jetpackcompose.domain.StatsItem
-import com.kes.app050_kt_jetpackcompose.domain.StatsType
-import com.kes.app050_kt_jetpackcompose.domain.getItemByType
 
 @Preview
 @Composable

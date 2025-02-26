@@ -1,4 +1,4 @@
-package com.kes.app050_kt_jetpackcompose.domain
+package com.kes.app050_kt_jetpackcompose.ui.postCard
 
 enum class StatsType {
     VIEWS, COMMENTS, SHARES, LIKES

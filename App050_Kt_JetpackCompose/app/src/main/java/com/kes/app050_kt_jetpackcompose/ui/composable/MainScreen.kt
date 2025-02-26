@@ -14,13 +14,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.kes.app050_kt_jetpackcompose.domain.PostItem
+import com.kes.app050_kt_jetpackcompose.ui.postCard.PostCard
+import com.kes.app050_kt_jetpackcompose.ui.postCard.PostItem
 import com.kes.app050_kt_jetpackcompose.ui.state.NavigationState
-import com.kes.app050_kt_jetpackcompose.ui.viewModel.MainViewModel
+import com.kes.app050_kt_jetpackcompose.ui.postCard.PostViewModel
 
 
 @Composable
-fun MainScreen(viewModel: MainViewModel) {
+fun MainScreen(viewModel: PostViewModel) {
     Log.d("TAG", "MainScreen Called")
     val postItem = viewModel.postItem.observeAsState(PostItem())
 

@@ -9,9 +9,9 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.livedata.observeAsState
-import com.kes.app050_kt_jetpackcompose.ui.composable.ProfileCard
+import com.kes.app050_kt_jetpackcompose.ui.profileCard.ProfileCard
+import com.kes.app050_kt_jetpackcompose.ui.profileCard.ProfileViewModel
 import com.kes.app050_kt_jetpackcompose.ui.theme.ApplicationTheme
-import com.kes.app050_kt_jetpackcompose.ui.viewModel.ProfileViewModel
 
 class MainActivity : ComponentActivity() {
 

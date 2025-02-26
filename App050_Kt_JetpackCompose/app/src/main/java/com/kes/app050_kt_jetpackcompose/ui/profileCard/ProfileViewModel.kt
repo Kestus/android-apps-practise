@@ -1,9 +1,8 @@
-package com.kes.app050_kt_jetpackcompose.ui.viewModel
+package com.kes.app050_kt_jetpackcompose.ui.profileCard
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.kes.app050_kt_jetpackcompose.domain.ProfileItem
 import kotlin.random.Random
 
 class ProfileViewModel : ViewModel() {
