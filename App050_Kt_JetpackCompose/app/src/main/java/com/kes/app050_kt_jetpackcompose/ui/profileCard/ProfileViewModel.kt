@@ -22,14 +22,19 @@ class ProfileViewModel : ViewModel() {
     private val _profiles = MutableLiveData<List<ProfileItem>>(profileList)
     val profiles: LiveData<List<ProfileItem>> get() = _profiles
 
-    fun toggleFollowStatus(model: ProfileItem) {
+    fun toggleFollowStatus(item: ProfileItem) {
         val modifiedList = _profiles.value?.toMutableList() ?: mutableListOf()
         modifiedList.replaceAll {
-            if (it == model) {
+            if (it == item) {
                 it.copy(isFollowing = !it.isFollowing)
             } else it
         }
         _profiles.value = modifiedList
     }
 
+    fun delete(item: ProfileItem) {
+        _profiles.value?.let {oldList ->
+            _profiles.value = oldList.filter { it != item }
+        }
+    }
 }
