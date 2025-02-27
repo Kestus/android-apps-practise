@@ -49,7 +49,7 @@ private fun PostCardPreview() {
     )
 }
 
-private typealias clickListener = ((StatsItem) -> Unit)?
+private typealias clickListener = ((PostItem, StatsType) -> Unit)?
 
 @Composable
 fun PostCard(
@@ -80,30 +80,31 @@ fun PostCard(
             // Header
             Header(postItem)
 
-            // Post content
+            // Post body
             Column {
-                // Body
                 Text(
                     modifier = Modifier.padding(vertical = 8.dp),
                     text = postItem.formatContentText(),
                     fontSize = 18.sp
                 )
-                // Image
-                Image(
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .clip(RoundedCornerShape(3))
-                        .fillMaxWidth()
-                        .heightIn(max = 420.dp),
-                    painter = painterResource(id = postItem.contentImageResId),
-                    contentDescription = "post image",
-                    contentScale = ContentScale.FillHeight
-                )
+                // Image if res not null
+                postItem.bodyImageResId?.let {
+                    Image(
+                        modifier = Modifier
+                            .aspectRatio(1f)
+                            .clip(RoundedCornerShape(3))
+                            .fillMaxWidth()
+                            .heightIn(max = 420.dp),
+                        painter = painterResource(id = it),
+                        contentDescription = "post image",
+                        contentScale = ContentScale.FillHeight
+                    )
+                }
             }
 
             // Footer
             Stats(
-                stats = postItem.stats,
+                postItem = postItem,
                 onViewsClickListener = onViewsClickListener,
                 onShareClickListener = onShareClickListener,
                 onLikeClickListener = onLikeClickListener,
@@ -182,7 +183,7 @@ private fun Header(postData: PostItem) {
 
 @Composable
 private fun Stats(
-    stats: List<StatsItem>,
+    postItem: PostItem,
     onViewsClickListener: clickListener = null,
     onShareClickListener: clickListener = null,
     onLikeClickListener: clickListener = null,
@@ -191,37 +192,32 @@ private fun Stats(
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
-        val itemViews = stats.getItemByType(StatsType.VIEWS)
-        val itemShares = stats.getItemByType(StatsType.SHARES)
-        val itemComments = stats.getItemByType(StatsType.COMMENTS)
-        val itemLikes = stats.getItemByType(StatsType.LIKES)
-
         CounterWithIcon(
-            itemViews.count.toString(),
+            postItem.stats.views.toString(),
             R.drawable.ic_eye
         ) {
-            onViewsClickListener?.invoke(itemViews)
+            onViewsClickListener?.invoke(postItem, StatsType.VIEW)
         }
         Spacer(modifier = Modifier.weight(1f))
         CounterWithIcon(
-            itemShares.count.toString(),
+            postItem.stats.shares.toString(),
             R.drawable.ic_share
         ) {
-            onShareClickListener?.invoke(itemShares)
+            onShareClickListener?.invoke(postItem, StatsType.SHARE)
         }
         Spacer(modifier = Modifier.width(4.dp))
         CounterWithIcon(
-            itemComments.count.toString(),
+            postItem.stats.comments.toString(),
             R.drawable.ic_comment
         ) {
-            onCommentsClickListener?.invoke(itemComments)
+            onCommentsClickListener?.invoke(postItem, StatsType.COMMENT)
         }
         Spacer(modifier = Modifier.width(4.dp))
         CounterWithIcon(
-            itemLikes.count.toString(),
+            postItem.stats.likes.toString(),
             R.drawable.ic_fav_filled
         ) {
-            onLikeClickListener?.invoke(itemLikes)
+            onLikeClickListener?.invoke(postItem, StatsType.LIKE)
         }
     }
 }

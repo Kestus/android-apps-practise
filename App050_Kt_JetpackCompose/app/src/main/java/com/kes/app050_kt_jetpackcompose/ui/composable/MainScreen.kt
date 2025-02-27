@@ -1,12 +1,19 @@
 package com.kes.app050_kt_jetpackcompose.ui.composable
 
 import android.util.Log
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
@@ -15,16 +22,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.kes.app050_kt_jetpackcompose.ui.postCard.PostCard
-import com.kes.app050_kt_jetpackcompose.ui.postCard.PostItem
+import com.kes.app050_kt_jetpackcompose.ui.postCard.PostsViewModel
 import com.kes.app050_kt_jetpackcompose.ui.state.NavigationState
-import com.kes.app050_kt_jetpackcompose.ui.postCard.PostViewModel
 
 
 @Composable
-fun MainScreen(viewModel: PostViewModel) {
-    Log.d("TAG", "MainScreen Called")
-    val postItem = viewModel.postItem.observeAsState(PostItem())
-
+fun MainScreen(viewModel: PostsViewModel) {
     Scaffold(
         bottomBar = {
             BottomAppBar {
@@ -58,15 +61,42 @@ fun MainScreen(viewModel: PostViewModel) {
             }
         }
     ) { paddingValues ->
-        PostCard(
-            modifier = Modifier
-                .padding(paddingValues)
-                .padding(horizontal = 4.dp),
-            postItem = postItem.value,
-            onCommentsClickListener = viewModel::incStatCount,
-            onLikeClickListener = viewModel::incStatCount,
-            onShareClickListener = viewModel::incStatCount,
-            onViewsClickListener = viewModel::incStatCount,
-        )
+        val posts = viewModel.postsLiveData.observeAsState(listOf())
+        LazyColumn(
+            modifier = Modifier.padding(paddingValues),
+            contentPadding = PaddingValues(
+                vertical = 12.dp,
+                horizontal = 6.dp
+            ),
+            verticalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            items(posts.value, key = { it.id }) { postItem ->
+                val swipeState = rememberSwipeToDismissBoxState(
+                    confirmValueChange = {
+                        when (it) {
+                            SwipeToDismissBoxValue.EndToStart -> viewModel.delete(
+                                postItem.id
+                            )
+
+                            else -> false
+                        }
+                    },
+                    positionalThreshold = { it * 0.7f }
+                )
+                SwipeToDismissBox(
+                    modifier = Modifier.animateItem(),
+                    state = swipeState,
+                    backgroundContent = {}
+                ) {
+                    PostCard(
+                        postItem = postItem,
+                        onViewsClickListener = viewModel::incItemStat,
+                        onShareClickListener = viewModel::incItemStat,
+                        onLikeClickListener = viewModel::incItemStat,
+                        onCommentsClickListener = viewModel::incItemStat
+                    )
+                }
+            }
+        }
     }
 }
