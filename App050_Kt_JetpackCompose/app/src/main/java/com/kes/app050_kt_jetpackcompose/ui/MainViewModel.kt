@@ -1,21 +1,32 @@
-package com.kes.app050_kt_jetpackcompose.ui.postCard
+package com.kes.app050_kt_jetpackcompose.ui
 
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.kes.app050_kt_jetpackcompose.R
+import com.kes.app050_kt_jetpackcompose.ui.postCard.PostItem
+import com.kes.app050_kt_jetpackcompose.ui.postCard.PostItemStats
+import com.kes.app050_kt_jetpackcompose.ui.postCard.StatsType
+import com.kes.app050_kt_jetpackcompose.ui.state.NavigationState
 import java.util.Calendar
 import java.util.GregorianCalendar
 import kotlin.random.Random
 
-class PostsViewModel : ViewModel() {
+class MainViewModel : ViewModel() {
 
     private val _allPosts: List<PostItem> = generatePosts()
 
     private val _postsLiveData = MutableLiveData(_allPosts)
     val postsLiveData: LiveData<List<PostItem>>
         get() = _postsLiveData
+
+    private val _selectedNavItem = MutableLiveData<NavigationState>(NavigationState.Home)
+    val selectedNavItem: LiveData<NavigationState> = _selectedNavItem
+
+    fun selectNavState(state: NavigationState) {
+        _selectedNavItem.value = state
+    }
 
     private fun generatePosts(): MutableList<PostItem> = mutableListOf<PostItem>().apply {
         val random = Random(GregorianCalendar().get(Calendar.MINUTE))

@@ -6,13 +6,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import com.kes.app050_kt_jetpackcompose.ui.composable.MainScreen
-import com.kes.app050_kt_jetpackcompose.ui.postCard.PostsViewModel
 import com.kes.app050_kt_jetpackcompose.ui.theme.ApplicationTheme
 
 class MainActivity : ComponentActivity() {
 
-    private val viewModel by viewModels<PostsViewModel>()
+    private val viewModel by viewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
