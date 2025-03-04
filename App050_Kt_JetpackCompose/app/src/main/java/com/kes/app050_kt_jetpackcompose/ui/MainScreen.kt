@@ -15,54 +15,25 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.kes.app050_kt_jetpackcompose.ui.composable.HomeScreen
 import com.kes.app050_kt_jetpackcompose.ui.navigation.AppNavGraph
-import com.kes.app050_kt_jetpackcompose.ui.navigation.NavigationState
-import com.kes.app050_kt_jetpackcompose.ui.navigation.Screen
+import com.kes.app050_kt_jetpackcompose.ui.navigation.BottomBarNavigationState
+import com.kes.app050_kt_jetpackcompose.ui.navigation.rememberNavigationController
 
 
 @Composable
 fun MainScreen(viewModel: MainViewModel) {
-    val navHostController = rememberNavController()
+    val navController = rememberNavigationController()
 
     Scaffold(
         bottomBar = {
             BottomAppBar {
                 Log.d("TAG", "BottomAppBar Called")
-                val navBackStackEntry by navHostController.currentBackStackEntryAsState()
-                val currentRoute = navBackStackEntry?.destination?.route
-                val navStates = listOf(
-                    NavigationState.Home,
-                    NavigationState.Favourite,
-                    NavigationState.Profile,
-                )
-                for (state in navStates) {
+
+                for (state in BottomBarNavigationState.asList()) {
                     NavigationBarItem(
-                        selected = currentRoute == state.screen.route,
-                        onClick = {
-                            navHostController.navigate(state.screen.route) {
-                                // if not at Home route: navigate to Home route at back action
-                                // else if backstack not empty: navigate to previous route
-                                // else: close app
-                                if (state != NavigationState.Home) {
-                                    // delete from backstack all routes up to Home
-                                    popUpTo(Screen.Home.route) {
-                                        // save state of all deleted routes
-                                        saveState = true
-                                    }
-                                }
-                                // only one copy of instance will exist
-                                launchSingleTop = true
-                                // Navigating to the current route again, will reset it's state.
-                                if (state.screen.route != currentRoute) {
-                                    // restore route state, if it was previously deleted.
-                                    // cant restore state after back action.
-                                    restoreState = true
-                                }
-                            }
-                        },
+                        selected = navController.currentRoute == state.screen.route,
+                        onClick = { navController.navigateTo(state.screen.route) },
                         icon = {
                             Icon(
                                 imageVector = state.icon,
@@ -79,7 +50,7 @@ fun MainScreen(viewModel: MainViewModel) {
     ) { paddingValues ->
         val modifier = Modifier.padding(paddingValues)
         AppNavGraph(
-            navHostController = navHostController,
+            navHostController = navController.navHostController,
             homeScreenContent = { HomeScreen(modifier, viewModel) },
             favoriteScreenContent = { TextCounter("fav screen", modifier) },
             profileScreenContent = { TextCounter("profile screen", modifier) }

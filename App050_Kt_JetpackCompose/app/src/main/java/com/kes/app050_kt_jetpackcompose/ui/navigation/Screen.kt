@@ -9,13 +9,9 @@ sealed class Screen(
     data object Profile : Screen(ROUTE_PROFILE)
 
     companion object {
-        private const val ROUTE_HOME = "news_feed"
-        private const val ROUTE_FAVORITE = "favorite"
-        private const val ROUTE_PROFILE = "profile"
-
-        val VALUES = listOf(
-            Home, Favourite, Profile
-        )
+        private const val ROUTE_HOME = "route_home"
+        private const val ROUTE_FAVORITE = "route_favorite"
+        private const val ROUTE_PROFILE = "route_profile"
     }
 
 }
