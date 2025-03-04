@@ -19,6 +19,7 @@ import com.kes.app050_kt_jetpackcompose.ui.postCard.PostCard
 fun HomeScreen(modifier: Modifier, viewModel: MainViewModel) {
     val posts = viewModel.postsLiveData.observeAsState(listOf())
     LazyColumn(
+        modifier = modifier,
         contentPadding = PaddingValues(
             vertical = 12.dp,
             horizontal = 6.dp

@@ -68,4 +68,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     implementation("androidx.compose.runtime:runtime-livedata:1.7.6")
+
+    // compose navigation
+    implementation("androidx.navigation:navigation-compose:2.8.8")
 }
