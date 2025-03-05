@@ -15,10 +15,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import com.kes.app050_kt_jetpackcompose.navigation.AppNavGraph
+import com.kes.app050_kt_jetpackcompose.navigation.BottomBarNavigationState
+import com.kes.app050_kt_jetpackcompose.navigation.rememberNavigationController
 import com.kes.app050_kt_jetpackcompose.ui.composable.HomeScreen
-import com.kes.app050_kt_jetpackcompose.ui.navigation.AppNavGraph
-import com.kes.app050_kt_jetpackcompose.ui.navigation.BottomBarNavigationState
-import com.kes.app050_kt_jetpackcompose.ui.navigation.rememberNavigationController
 
 
 @Composable
@@ -51,7 +51,7 @@ fun MainScreen(viewModel: MainViewModel) {
         val modifier = Modifier.padding(paddingValues)
         AppNavGraph(
             navHostController = navController.navHostController,
-            homeScreenContent = { HomeScreen(modifier, viewModel) },
+            homeScreenContent = { HomeScreen(viewModel) },
             favoriteScreenContent = { TextCounter("fav screen", modifier) },
             profileScreenContent = { TextCounter("profile screen", modifier) }
         )

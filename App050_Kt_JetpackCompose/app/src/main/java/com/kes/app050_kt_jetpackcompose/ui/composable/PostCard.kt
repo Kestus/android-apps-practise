@@ -1,4 +1,4 @@
-package com.kes.app050_kt_jetpackcompose.ui.postCard
+package com.kes.app050_kt_jetpackcompose.ui.composable
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
@@ -39,6 +39,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kes.app050_kt_jetpackcompose.R
+import com.kes.app050_kt_jetpackcompose.domain.postCard.PostItem
+import com.kes.app050_kt_jetpackcompose.domain.postCard.StatsType
 
 @Preview
 @Composable
@@ -49,16 +51,17 @@ private fun PostCardPreview() {
     )
 }
 
-private typealias clickListener = ((PostItem, StatsType) -> Unit)?
+private typealias incrementStatListener = ((PostItem, StatsType) -> Unit)?
+private typealias showCommentsListener = ((PostItem) -> Unit)?
 
 @Composable
 fun PostCard(
     modifier: Modifier = Modifier,
     postItem: PostItem,
-    onViewsClickListener: clickListener = null,
-    onShareClickListener: clickListener = null,
-    onLikeClickListener: clickListener = null,
-    onCommentsClickListener: clickListener = null
+    onViewsClickListener: incrementStatListener = null,
+    onShareClickListener: incrementStatListener = null,
+    onLikeClickListener: incrementStatListener = null,
+    onCommentsClickListener: showCommentsListener = null
 ) {
     Card(
         modifier = modifier,
@@ -184,10 +187,10 @@ private fun Header(postData: PostItem) {
 @Composable
 private fun Stats(
     postItem: PostItem,
-    onViewsClickListener: clickListener = null,
-    onShareClickListener: clickListener = null,
-    onLikeClickListener: clickListener = null,
-    onCommentsClickListener: clickListener = null
+    onViewsClickListener: incrementStatListener = null,
+    onShareClickListener: incrementStatListener = null,
+    onLikeClickListener: incrementStatListener = null,
+    onCommentsClickListener: showCommentsListener = null
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically
@@ -210,7 +213,7 @@ private fun Stats(
             postItem.stats.comments.toString(),
             R.drawable.ic_comment
         ) {
-            onCommentsClickListener?.invoke(postItem, StatsType.COMMENT)
+            onCommentsClickListener?.invoke(postItem)
         }
         Spacer(modifier = Modifier.width(4.dp))
         CounterWithIcon(

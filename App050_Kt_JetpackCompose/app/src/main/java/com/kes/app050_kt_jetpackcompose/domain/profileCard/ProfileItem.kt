@@ -1,4 +1,4 @@
-package com.kes.app050_kt_jetpackcompose.ui.profileCard
+package com.kes.app050_kt_jetpackcompose.domain.profileCard
 
 data class ProfileItem(
     val id: Int,

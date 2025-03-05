@@ -1,4 +1,4 @@
-package com.kes.app050_kt_jetpackcompose.ui.navigation
+package com.kes.app050_kt_jetpackcompose.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController

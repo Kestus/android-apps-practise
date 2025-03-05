@@ -1,4 +1,4 @@
-package com.kes.app050_kt_jetpackcompose.ui.navigation
+package com.kes.app050_kt_jetpackcompose.navigation
 
 sealed class Screen(
     val route: String

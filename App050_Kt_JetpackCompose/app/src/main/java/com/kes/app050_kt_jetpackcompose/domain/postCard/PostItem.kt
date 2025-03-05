@@ -1,4 +1,4 @@
-package com.kes.app050_kt_jetpackcompose.ui.postCard
+package com.kes.app050_kt_jetpackcompose.domain.postCard
 
 import com.kes.app050_kt_jetpackcompose.R
 
