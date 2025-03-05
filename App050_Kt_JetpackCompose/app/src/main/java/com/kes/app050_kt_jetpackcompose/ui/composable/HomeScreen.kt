@@ -1,33 +1,29 @@
 package com.kes.app050_kt_jetpackcompose.ui.composable
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import com.kes.app050_kt_jetpackcompose.ui.MainViewModel
-import com.kes.app050_kt_jetpackcompose.ui.state.HomeScreenState
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kes.app050_kt_jetpackcompose.ui.state.PostsScreenState
+import com.kes.app050_kt_jetpackcompose.ui.viewModel.PostsViewModel
 
 
 @Composable
-fun HomeScreen(viewModel: MainViewModel) {
-    val screenState by viewModel.screenState.observeAsState(HomeScreenState.Initial)
+fun HomeScreen(
+    onCommentsClickListener: OnCommentsClickListenerCallback
+) {
+    val viewModel: PostsViewModel = viewModel()
+    val screenState by viewModel.screenState.observeAsState(PostsScreenState.Initial)
 
     when (val currentState = screenState) {
-        is HomeScreenState.Posts ->
+        is PostsScreenState.Posts ->
             PostsScreen(
-                currentState.posts,
-                viewModel
+                posts = currentState.posts,
+                viewModel = viewModel,
+                onCommentsClickListener = onCommentsClickListener
             )
 
-        is HomeScreenState.Comments -> {
-            CommentsScreen(
-                currentState.post,
-                currentState.comments,
-                viewModel::closeComments
-            )
-            BackHandler { viewModel.closeComments() }
-        }
-        HomeScreenState.Initial -> {/* do nothing */}
+        PostsScreenState.Initial -> {/* do nothing */}
     }
 
 }

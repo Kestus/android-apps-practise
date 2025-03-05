@@ -1,5 +1,6 @@
 package com.kes.app050_kt_jetpackcompose.ui.composable
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -34,18 +36,43 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kes.app050_kt_jetpackcompose.domain.postCard.CommentItem
 import com.kes.app050_kt_jetpackcompose.domain.postCard.PostItem
+import com.kes.app050_kt_jetpackcompose.ui.state.CommentsScreenState
 import com.kes.app050_kt_jetpackcompose.ui.theme.ApplicationTheme
+import com.kes.app050_kt_jetpackcompose.ui.viewModel.CommentsViewModel
 
 private val colorTopBarContainer = Color(0xFFD7EEFF)
 private val colorScaffoldContainer = Color(0xFFF3FAFF)
 
 @Composable
 fun CommentsScreen(
+    post: PostItem,
+    onBackPressed: () -> Unit,
+) {
+    val viewModel: CommentsViewModel = viewModel()
+    viewModel.init(post)
+    val screenState = viewModel.screenState.observeAsState(CommentsScreenState.Initial)
+
+    when (val currentState = screenState.value) {
+        is CommentsScreenState.Comments -> {
+            ListComments(
+                postItem = currentState.post,
+                comments = currentState.comments,
+                onBackPressed = onBackPressed
+            )
+            BackHandler { onBackPressed() }
+        }
+        CommentsScreenState.Initial -> {/*do nothing*/}
+    }
+}
+
+@Composable
+private fun ListComments(
     postItem: PostItem,
     comments: List<CommentItem>,
-    onBackPressed: () -> Unit,
+    onBackPressed: () -> Unit
 ) {
     Scaffold(
         containerColor = colorScaffoldContainer,
@@ -147,6 +174,6 @@ private fun Preview() {
         }
     }
     ApplicationTheme {
-        CommentsScreen(post, comments) {}
+        ListComments(post, comments) {}
     }
 }
