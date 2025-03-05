@@ -9,21 +9,29 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import com.kes.app050_kt_jetpackcompose.domain.postCard.PostItem
 import com.kes.app050_kt_jetpackcompose.navigation.AppNavGraph
 import com.kes.app050_kt_jetpackcompose.navigation.BottomBarNavigationState
 import com.kes.app050_kt_jetpackcompose.navigation.rememberNavigationController
+import com.kes.app050_kt_jetpackcompose.ui.composable.CommentsScreen
 import com.kes.app050_kt_jetpackcompose.ui.composable.HomeScreen
 
 
 @Composable
-fun MainScreen(viewModel: MainViewModel) {
+fun MainScreen() {
     val navController = rememberNavigationController()
+    val commentsToPost: MutableState<PostItem?> = remember {
+        mutableStateOf(null)
+    }
 
     Scaffold(
         bottomBar = {
@@ -51,7 +59,18 @@ fun MainScreen(viewModel: MainViewModel) {
         val modifier = Modifier.padding(paddingValues)
         AppNavGraph(
             navHostController = navController.navHostController,
-            homeScreenContent = { HomeScreen(viewModel) },
+            homeScreenContent = {
+                val selectedPost = commentsToPost.value
+                if (selectedPost == null) {
+                    HomeScreen {
+                        commentsToPost.value = it
+                    }
+                } else {
+                    CommentsScreen(selectedPost) {
+                        commentsToPost.value = null
+                    }
+                }
+            },
             favoriteScreenContent = { TextCounter("fav screen", modifier) },
             profileScreenContent = { TextCounter("profile screen", modifier) }
         )

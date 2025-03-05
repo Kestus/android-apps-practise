@@ -51,8 +51,8 @@ private fun PostCardPreview() {
     )
 }
 
-private typealias incrementStatListener = ((PostItem, StatsType) -> Unit)?
-private typealias showCommentsListener = ((PostItem) -> Unit)?
+typealias incrementStatListener = ((PostItem, StatsType) -> Unit)?
+typealias OnCommentsClickListenerCallback = ((PostItem) -> Unit)?
 
 @Composable
 fun PostCard(
@@ -61,7 +61,7 @@ fun PostCard(
     onViewsClickListener: incrementStatListener = null,
     onShareClickListener: incrementStatListener = null,
     onLikeClickListener: incrementStatListener = null,
-    onCommentsClickListener: showCommentsListener = null
+    onCommentsClickListener: OnCommentsClickListenerCallback = null
 ) {
     Card(
         modifier = modifier,
@@ -190,7 +190,7 @@ private fun Stats(
     onViewsClickListener: incrementStatListener = null,
     onShareClickListener: incrementStatListener = null,
     onLikeClickListener: incrementStatListener = null,
-    onCommentsClickListener: showCommentsListener = null
+    onCommentsClickListener: OnCommentsClickListenerCallback = null
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically

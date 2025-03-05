@@ -17,12 +17,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.kes.app050_kt_jetpackcompose.domain.postCard.PostItem
-import com.kes.app050_kt_jetpackcompose.ui.MainViewModel
+import com.kes.app050_kt_jetpackcompose.ui.viewModel.PostsViewModel
 
 @Composable
 fun PostsScreen(
     posts: List<PostItem>,
-    viewModel: MainViewModel,
+    viewModel: PostsViewModel,
+    onCommentsClickListener: OnCommentsClickListenerCallback,
     contentPadding: PaddingValues = PaddingValues(
         vertical = 12.dp,
         horizontal = 6.dp
@@ -57,7 +58,7 @@ fun PostsScreen(
                         onViewsClickListener = viewModel::incStat,
                         onShareClickListener = viewModel::incStat,
                         onLikeClickListener = viewModel::incStat,
-                        onCommentsClickListener = viewModel::showComments
+                        onCommentsClickListener = onCommentsClickListener
                     )
                 }
             }
