@@ -24,34 +24,31 @@ class MainViewModel : ViewModel() {
 
     private var savedState: HomeScreenState? = null
 
-    fun showComments(item: PostItem) = setState {
+    fun showComments(item: PostItem) = setState<HomeScreenState.Posts> {
         savedState = it
         val comments = generateComments(item)
         HomeScreenState.Comments(item, comments)
     }
 
-    fun closeComments() = setState {
-        if (it !is HomeScreenState.Comments) return@setState null
+    fun closeComments() = setState<HomeScreenState.Comments> {
         val newState = savedState ?: initialState
         savedState = null
         newState
     }
 
-    fun incStat(item: PostItem, type: StatsType) = setState { state ->
-        if (state !is HomeScreenState.Posts) return@setState null
-
-        val newStats = item.stats.inc(type)
-        val newPosts = state.posts.map {
-            if (it == item) it.copy(stats = newStats)
-            else it
+    fun incStat(item: PostItem, type: StatsType) =
+        setState<HomeScreenState.Posts> { state ->
+            val newStats = item.stats.inc(type)
+            val newPosts = state.posts.map {
+                if (it == item) it.copy(stats = newStats)
+                else it
+            }
+            HomeScreenState.Posts(newPosts)
         }
-        HomeScreenState.Posts(newPosts)
-    }
 
     fun delete(postId: Int): Boolean {
         var isDeleted = false
-        withState { state ->
-            if (state !is HomeScreenState.Posts) return@withState
+        withState<HomeScreenState.Posts> { state ->
             val newPosts = state.posts.filter {
                 if (it.id == postId) {
                     isDeleted = true
@@ -63,16 +60,20 @@ class MainViewModel : ViewModel() {
         return isDeleted
     }
 
-    private inline fun setState(block: (HomeScreenState) -> HomeScreenState?) {
-        withState {
-            block(it)?.let {newState ->
+    private inline fun <reified T : HomeScreenState> setState(block: (T) -> HomeScreenState?) {
+        withState<T> {
+            block(it)?.let { newState ->
                 _screenState.value = newState
             }
         }
     }
 
-    private inline fun withState(block: (HomeScreenState) -> Unit) {
-        _screenState.value?.let(block)
+    private inline fun <reified T : HomeScreenState> withState(block: (T) -> Unit) {
+        _screenState.value?.let {
+            if (it is T) {
+                block(it)
+            } else throw IllegalStateException("wrong generic type for current screen state")
+        }
     }
 
     private fun generateComments(item: PostItem): List<CommentItem> =
