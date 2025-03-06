@@ -2,29 +2,24 @@ package com.kes.app050_kt_jetpackcompose.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 
 class NavigationController(
     val navHostController: NavHostController
 ) {
-
-    private val startRoute by lazy {
-        navHostController.graph.startDestinationRoute
-            ?: BottomBarNavigationState.Home.screen.route
-    }
-
-    val currentRoute
+    private val currentRoute
         get() = navHostController.currentBackStackEntry?.destination?.route
+
 
     fun navigateTo(route: String) {
         navHostController.navigate(route) {
             // delete from backstack all routes up to start route
-            popUpTo(startRoute) {
+            popUpTo(navHostController.graph.findStartDestination().id) {
                 // save state of all deleted routes
                 saveState = true
             }
-
             // only one copy of instance will exist
             launchSingleTop = true
 
@@ -35,6 +30,11 @@ class NavigationController(
                 restoreState = true
             }
         }
+
+    }
+
+    fun navigateToComments() {
+        navHostController.navigate(Screen.Comments.route)
     }
 }
 

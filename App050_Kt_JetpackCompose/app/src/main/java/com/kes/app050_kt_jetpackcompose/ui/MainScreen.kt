@@ -18,6 +18,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.kes.app050_kt_jetpackcompose.domain.postCard.PostItem
 import com.kes.app050_kt_jetpackcompose.navigation.AppNavGraph
 import com.kes.app050_kt_jetpackcompose.navigation.BottomBarNavigationState
@@ -29,6 +31,7 @@ import com.kes.app050_kt_jetpackcompose.ui.composable.HomeScreen
 @Composable
 fun MainScreen() {
     val navController = rememberNavigationController()
+    val navBackStackEntry by navController.navHostController.currentBackStackEntryAsState()
     val commentsToPost: MutableState<PostItem?> = remember {
         mutableStateOf(null)
     }
@@ -39,8 +42,11 @@ fun MainScreen() {
                 Log.d("TAG", "BottomAppBar Called")
 
                 for (state in BottomBarNavigationState.asList()) {
+                    val isSelected = navBackStackEntry?.destination?.hierarchy?.any {
+                        it.route == state.screen.route
+                    } ?: false
                     NavigationBarItem(
-                        selected = navController.currentRoute == state.screen.route,
+                        selected = isSelected,
                         onClick = { navController.navigateTo(state.screen.route) },
                         icon = {
                             Icon(
@@ -59,20 +65,25 @@ fun MainScreen() {
         val modifier = Modifier.padding(paddingValues)
         AppNavGraph(
             navHostController = navController.navHostController,
-            homeScreenContent = {
-                val selectedPost = commentsToPost.value
-                if (selectedPost == null) {
-                    HomeScreen {
-                        commentsToPost.value = it
-                    }
-                } else {
-                    CommentsScreen(selectedPost) {
-                        commentsToPost.value = null
-                    }
-                }
-            },
             favoriteScreenContent = { TextCounter("fav screen", modifier) },
-            profileScreenContent = { TextCounter("profile screen", modifier) }
+            profileScreenContent = { TextCounter("profile screen", modifier) },
+            postsScreenContent = {
+                HomeScreen(
+                    onCommentsClickListener = {
+                        commentsToPost.value = it
+                        navController.navigateToComments()
+                    }
+                )
+            },
+            commentsScreenContent = {
+                CommentsScreen(
+                    post = commentsToPost.value!!,
+                    onBackPressed = {
+                        navController.navHostController.popBackStack()
+                    }
+                )
+            }
+
         )
     }
 }

@@ -7,15 +7,16 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.kes.app050_kt_jetpackcompose.R
 
+
 sealed class NavigationState(
-    val screen: Screen,
+    val screen: Screen
 )
 
 sealed class BottomBarNavigationState(
     screen: Screen,
     val titleResId: Int,
     val icon: ImageVector
-) : NavigationState(screen) {
+) : NavigationState(screen){
 
     companion object {
         fun asList() = listOf(
