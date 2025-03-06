@@ -7,13 +7,15 @@ import com.kes.app050_kt_jetpackcompose.domain.postCard.CommentItem
 import com.kes.app050_kt_jetpackcompose.domain.postCard.PostItem
 import com.kes.app050_kt_jetpackcompose.ui.state.CommentsScreenState
 
-class CommentsViewModel: ViewModel() {
+class CommentsViewModel(
+    post: PostItem
+) : ViewModel() {
 
     private val _screenState = MutableLiveData<CommentsScreenState>(CommentsScreenState.Initial)
     val screenState: LiveData<CommentsScreenState>
         get() = _screenState
 
-    fun init(post: PostItem) {
+    init {
         _screenState.value = CommentsScreenState.Comments(post, generateComments(post))
     }
 

@@ -42,6 +42,7 @@ import com.kes.app050_kt_jetpackcompose.domain.postCard.PostItem
 import com.kes.app050_kt_jetpackcompose.ui.state.CommentsScreenState
 import com.kes.app050_kt_jetpackcompose.ui.theme.ApplicationTheme
 import com.kes.app050_kt_jetpackcompose.ui.viewModel.CommentsViewModel
+import com.kes.app050_kt_jetpackcompose.ui.viewModel.CommentsViewModelFactory
 
 private val colorTopBarContainer = Color(0xFFD7EEFF)
 private val colorScaffoldContainer = Color(0xFFF3FAFF)
@@ -51,8 +52,9 @@ fun CommentsScreen(
     post: PostItem,
     onBackPressed: () -> Unit,
 ) {
-    val viewModel: CommentsViewModel = viewModel()
-    viewModel.init(post)
+    val viewModel: CommentsViewModel = viewModel(
+        factory = CommentsViewModelFactory(post)
+    )
     val screenState = viewModel.screenState.observeAsState(CommentsScreenState.Initial)
 
     when (val currentState = screenState.value) {
@@ -64,7 +66,7 @@ fun CommentsScreen(
             )
             BackHandler { onBackPressed() }
         }
-        CommentsScreenState.Initial -> {/*do nothing*/}
+        CommentsScreenState.Initial -> {/* do nothing */}
     }
 }
 
