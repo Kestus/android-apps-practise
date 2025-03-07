@@ -1,5 +1,6 @@
 package com.kes.app050_kt_jetpackcompose.navigation
 
+import android.net.Uri
 import com.kes.app050_kt_jetpackcompose.domain.postCard.PostItem
 
 sealed class Screen(
@@ -29,5 +30,6 @@ sealed class Screen(
         private const val ROUTE_COMMENTS = "${Comments.BASE_ROUTE}/{${Comments.KEY_POST_ID}}"
         private const val ROUTE_POSTS = "route_posts"
     }
-
 }
+
+fun String.encode() = Uri.encode(this)
