@@ -5,6 +5,7 @@ import androidx.compose.runtime.remember
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.kes.app050_kt_jetpackcompose.domain.postCard.PostItem
 
 class NavigationController(
     val navHostController: NavHostController
@@ -33,8 +34,8 @@ class NavigationController(
 
     }
 
-    fun navigateToComments() {
-        navHostController.navigate(Screen.Comments.route)
+    fun navigateToComments(post: PostItem) {
+        navHostController.navigate(Screen.Comments.getRouteWithArgs(post)) // comments/5/secondArg/..
     }
 }
 

@@ -9,18 +9,14 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.kes.app050_kt_jetpackcompose.domain.postCard.PostItem
 import com.kes.app050_kt_jetpackcompose.navigation.AppNavGraph
 import com.kes.app050_kt_jetpackcompose.navigation.BottomBarNavigationState
 import com.kes.app050_kt_jetpackcompose.navigation.rememberNavigationController
@@ -32,9 +28,6 @@ import com.kes.app050_kt_jetpackcompose.ui.composable.HomeScreen
 fun MainScreen() {
     val navController = rememberNavigationController()
     val navBackStackEntry by navController.navHostController.currentBackStackEntryAsState()
-    val commentsToPost: MutableState<PostItem?> = remember {
-        mutableStateOf(null)
-    }
 
     Scaffold(
         bottomBar = {
@@ -69,15 +62,14 @@ fun MainScreen() {
             profileScreenContent = { TextCounter("profile screen", modifier) },
             postsScreenContent = {
                 HomeScreen(
-                    onCommentsClickListener = {
-                        commentsToPost.value = it
-                        navController.navigateToComments()
+                    onCommentsClickListener = { post ->
+                        navController.navigateToComments(post)
                     }
                 )
             },
-            commentsScreenContent = {
+            commentsScreenContent = {post ->
                 CommentsScreen(
-                    post = commentsToPost.value!!,
+                    postItem = post,
                     onBackPressed = {
                         navController.navHostController.popBackStack()
                     }

@@ -49,11 +49,11 @@ private val colorScaffoldContainer = Color(0xFFF3FAFF)
 
 @Composable
 fun CommentsScreen(
-    post: PostItem,
-    onBackPressed: () -> Unit,
+    postItem: PostItem,
+    onBackPressed: () -> Unit
 ) {
     val viewModel: CommentsViewModel = viewModel(
-        factory = CommentsViewModelFactory(post)
+        factory = CommentsViewModelFactory(postItem)
     )
     val screenState = viewModel.screenState.observeAsState(CommentsScreenState.Initial)
 
