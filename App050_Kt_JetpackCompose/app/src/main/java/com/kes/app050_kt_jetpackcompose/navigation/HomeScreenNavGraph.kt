@@ -1,12 +1,11 @@
 package com.kes.app050_kt_jetpackcompose.navigation
 
+import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
-import com.google.gson.Gson
 import com.kes.app050_kt_jetpackcompose.domain.postCard.PostItem
 
 
@@ -23,13 +22,16 @@ fun NavGraphBuilder.homeScreenNavGraph(
             route = Screen.Comments.route,
             arguments = listOf(
                 navArgument(Screen.Comments.KEY_POST_ITEM) {
-                    type = NavType.StringType
+                    type = PostItem.NavigationType
                 }
             )
         ) {
             // comments/{post_id}
-            val postJson = it.arguments?.getString(Screen.Comments.KEY_POST_ITEM) ?: ""
-            val postItem = Gson().fromJson(postJson, PostItem::class.java)
+            val postItem = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                it.arguments?.getParcelable(Screen.Comments.KEY_POST_ITEM, PostItem::class.java)
+            } else {
+                it.arguments?.getParcelable(Screen.Comments.KEY_POST_ITEM)
+            } ?: throw RuntimeException("postItem should not be null")
             commentsScreenContent(postItem)
         }
     }
