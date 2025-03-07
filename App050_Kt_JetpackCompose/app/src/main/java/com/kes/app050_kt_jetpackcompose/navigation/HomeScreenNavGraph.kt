@@ -6,6 +6,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
+import com.google.gson.Gson
 import com.kes.app050_kt_jetpackcompose.domain.postCard.PostItem
 
 
@@ -21,14 +22,15 @@ fun NavGraphBuilder.homeScreenNavGraph(
         composable(
             route = Screen.Comments.route,
             arguments = listOf(
-                navArgument(Screen.Comments.KEY_POST_ID) {
-                    type = NavType.IntType
+                navArgument(Screen.Comments.KEY_POST_ITEM) {
+                    type = NavType.StringType
                 }
             )
         ) {
             // comments/{post_id}
-            val postId = it.arguments?.getInt(Screen.Comments.KEY_POST_ID) ?: 0
-            commentsScreenContent(PostItem(id = postId))
+            val postJson = it.arguments?.getString(Screen.Comments.KEY_POST_ITEM) ?: ""
+            val postItem = Gson().fromJson(postJson, PostItem::class.java)
+            commentsScreenContent(postItem)
         }
     }
 }
