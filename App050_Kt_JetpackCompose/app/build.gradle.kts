@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("kotlin-parcelize")
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -77,5 +78,8 @@ dependencies {
 
     // GSON
     implementation("com.google.code.gson:gson:2.11.0")
+
+    // Coil
+    implementation("io.coil-kt.coil3:coil-compose:3.1.0")
 
 }
