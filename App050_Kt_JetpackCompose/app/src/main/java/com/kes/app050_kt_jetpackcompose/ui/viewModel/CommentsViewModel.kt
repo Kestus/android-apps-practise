@@ -38,7 +38,7 @@ class CommentsViewModel(
     private fun generateComments(item: PostItem): List<CommentItem> =
         mutableListOf<CommentItem>().apply {
             repeat(item.stats.comments) {
-                val content = "comment content "
+                val content = " comment content "
                 add(
                     CommentItem(
                         id = it,

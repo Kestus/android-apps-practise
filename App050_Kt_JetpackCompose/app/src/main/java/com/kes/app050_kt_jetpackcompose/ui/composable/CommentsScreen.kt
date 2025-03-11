@@ -74,7 +74,7 @@ fun CommentsScreen(
 private fun ListComments(
     postItem: PostItem,
     comments: List<CommentItem>,
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
 ) {
     Scaffold(
         containerColor = colorScaffoldContainer,
